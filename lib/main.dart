@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/core/secrets/app_secret.dart';
+import 'package:myapp/curve_container_design2.dart';
 import 'package:myapp/features/auth/data/datasources/remote/auth_remote_data_source.dart';
 import 'package:myapp/features/auth/data/repository/auth_repository_impl.dart';
 import 'package:myapp/features/auth/domain/usecases/user_sign_up.dart';
 import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:myapp/login/login.dart';
+import 'package:myapp/settings/settings_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: GoogleFonts.nunitoSans().fontFamily,
       ),
-      home: const LoginScreen(),
+      home: const SettingsPage(),
     );
   }
 }
