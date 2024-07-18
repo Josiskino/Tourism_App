@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/core/theme/app_pallete.dart';
+import 'package:myapp/config/theme/app_pallete.dart';
 
 class AppTheme {
   static _border([Color color = AppPallete.borderColor]) => OutlineInputBorder(
