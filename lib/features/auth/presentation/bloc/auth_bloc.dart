@@ -1,28 +1,80 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myapp/features/auth/domain/usecases/user_sign_up.dart';
+import 'package:myapp/features/auth/domain/usecases/register_tourist_usecase.dart';
+import 'package:myapp/features/auth/domain/usecases/register_agency_usecase.dart';
+import 'package:myapp/features/auth/domain/usecases/login_usecase.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final UserSignUp _userSignUp;
+  final RegisterTouristUseCase _registerTouristUseCase;
+  final RegisterAgencyUseCase _registerAgencyUseCase;
+  final LoginUseCase _loginUseCase;
+
   AuthBloc({
-    required UserSignUp userSignUp,
-  })  : _userSignUp = userSignUp,
+    required RegisterTouristUseCase registerTouristUseCase,
+    required RegisterAgencyUseCase registerAgencyUseCase,
+    required LoginUseCase loginUseCase,
+  })  : _registerTouristUseCase = registerTouristUseCase,
+        _registerAgencyUseCase = registerAgencyUseCase,
+        _loginUseCase = loginUseCase,
         super(AuthInitial()) {
-    on<AuthSignUp>((event, emit) async {
-      final res = await _userSignUp.call(
-        UserSignUpParams(
-          name: event.name,
-          email: event.email,
-          password: event.password,
-        ),
-      );
-      res.fold(
-        (failure) => emit(AuthFailure(failure.message)), 
-        (uid) => emit(AuthSuccess(uid)),
-      );
-    });
+    on<RegisterTouristEvent>(_onRegisterTouristEvent);
+    on<RegisterAgencyEvent>(_onRegisterAgencyEvent);
+    on<LoginEvent>(_onLoginEvent);
+  }
+
+  Future<void> _onRegisterTouristEvent(
+    RegisterTouristEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    final res = await _registerTouristUseCase.call(
+      RegisterTouristParams(
+        id: event.id,
+        userId: event.userId,
+        touristName: event.touristName,
+      ),
+    );
+    res.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (tourist) => emit(AuthSuccess(tourist)),
+    );
+  }
+
+  Future<void> _onRegisterAgencyEvent(
+    RegisterAgencyEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    final res = await _registerAgencyUseCase.call(
+      RegisterAgencyParams(
+        id: event.id,
+        userId: event.userId,
+        agencyName: event.agencyName,
+        agencyResponsibleName: event.agencyResponsibleName,
+      ),
+    );
+    res.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (agency) => emit(AuthSuccess(agency)),
+    );
+  }
+
+  Future<void> _onLoginEvent(
+    LoginEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(AuthLoading());
+    final res = await _loginUseCase.call(
+      LoginParams(
+        email: event.email,
+        password: event.password,
+      ),
+    );
+    res.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (user) => emit(AuthSuccess(user)),
+    );
   }
 }
