@@ -71,10 +71,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
-    final res = await _loginUseCase.call(
-      LoginParams(
-        email: event.email,
-        password: event.password,
+    final res = await _loginUseCase(
+      TemplateParams(
+        params: {
+          'email': event.email,
+          'password': event.password,
+        },
       ),
     );
     res.fold(
