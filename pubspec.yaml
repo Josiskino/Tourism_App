@@ -44,6 +44,9 @@ dependencies:
   json_annotation: ^4.9.0
   get_it: ^7.7.0
   equatable: ^2.0.5
+  mockito: ^5.4.4
+  bloc_test: ^9.1.7
+  mocktail: ^1.0.4
 
 dev_dependencies:
   flutter_test:

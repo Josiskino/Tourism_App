@@ -3,13 +3,13 @@ part of 'auth_bloc.dart';
 abstract class AuthEvent {}
 
 class RegisterTouristEvent extends AuthEvent {
-  final int id;
-  final int userId;
+  final String email;
+  final String password;
   final String touristName;
 
   RegisterTouristEvent({
-    required this.id,
-    required this.userId,
+    required this.email,
+    required this.password,
     required this.touristName,
   });
 }

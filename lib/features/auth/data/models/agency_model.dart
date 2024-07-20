@@ -1,12 +1,13 @@
 
 
+import 'package:myapp/features/auth/data/models/user_model.dart';
 import 'package:myapp/features/auth/domain/entities/agency.dart';
 
 class AgencyModel extends Agency {
 
   AgencyModel({
     required super.id,
-    required super.userId,
+    required super.user,
     required super.agencyName,
     required super.agencyResponsibleName,
   });
@@ -14,7 +15,7 @@ class AgencyModel extends Agency {
   factory AgencyModel.fromJson(Map<String, dynamic> json) {
     return AgencyModel(
       id: json['id'],
-      userId: json['user_id'],
+      user: UserModel.fromJson(json['user']),
       agencyName: json['agencyName'],
       agencyResponsibleName: json['agencyResponsibleName'],
     );
@@ -23,7 +24,8 @@ class AgencyModel extends Agency {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'user_id': userId,
+      'email': user.email,
+      'role': user.role,
       'agencyName': agencyName,
       'agencyResponsibleName': agencyResponsibleName,
     };

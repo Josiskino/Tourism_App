@@ -1,26 +1,28 @@
+import 'package:myapp/features/auth/data/models/user_model.dart';
 import 'package:myapp/features/auth/domain/entities/tourist.dart';
 
 class TouristModel extends Tourist {
 
-  TouristModel({
+  const TouristModel({
     required super.id,
-    required super.userId,
+    required super.user,
     required super.touristName,
   });
 
   factory TouristModel.fromJson(Map<String, dynamic> json) {
+
     return TouristModel(
       id: json['id'],
-      userId: json['user_id'],
+      user: UserModel.fromJson(json['user']),
       touristName: json['touristName'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'user_id': userId,
       'touristName': touristName,
+      'email': user.email,
+      'role': user.role,
     };
   }
 

@@ -1,13 +1,15 @@
+import 'package:myapp/features/auth/domain/entities/user.dart';
+
 class Agency {
   
   final int id;
-  final int userId;
+  final User user;
   final String agencyName;
   final String agencyResponsibleName;
 
   Agency({
     required this.id,
-    required this.userId,
+    required this.user,
     required this.agencyName,
     required this.agencyResponsibleName,
   });
