@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/home_page.dart';
-import 'package:myapp/setup.dart' as di;
+import 'package:myapp/init_dependancies.dart' as di;
 import 'package:myapp/config/theme/theme_new.dart';
 import 'package:myapp/old_bloc_logic/bloc/auth_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await di.init();
+  await di.initDependancies();
   
   runApp(const MyApp());
 }

@@ -2,7 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:myapp/core/error/exceptions.dart';
 import 'package:myapp/core/error/failure.dart';
 import 'package:myapp/features/auth/data/datasources/remote/exemple_auth_remote_data_source.dart';
-import 'package:myapp/features/auth/domain/repository/auth_repository.dart';
+import 'package:myapp/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -11,7 +11,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<Failure, String>> loginInWithEmailAndPassword({required String email, required String password}) {
-    // TODO: implement loginInWithEmailAndPassword
     throw UnimplementedError();
   }
 

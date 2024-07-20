@@ -1,10 +1,10 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:myapp/core/error/exceptions.dart';
 import 'package:myapp/core/error/failure.dart';
+import 'package:myapp/core/params/params.dart';
 import 'package:myapp/features/auth/data/datasources/remote/auth_remote_data_source.dart';
 import 'package:myapp/features/auth/domain/entities/tourist.dart';
-import 'package:myapp/features/auth/domain/repository/tourist_repository.dart';
-import 'package:myapp/features/auth/data/models/tourist_model.dart';
+import 'package:myapp/features/auth/domain/repositories/tourist_repository.dart';
 
 class TouristRepositoryImpl implements TouristRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -12,13 +12,9 @@ class TouristRepositoryImpl implements TouristRepository {
   TouristRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<Either<Failure, Tourist>> registerTourist(Tourist tourist) async {
+  Future<Either<Failure, Tourist>> registerTourist(TemplateParams params) async {
     try {
-      final touristModel = await remoteDataSource.registerTourist(TouristModel(
-        id: tourist.id,
-        userId: tourist.userId,
-        touristName: tourist.touristName,
-      ).toJson());
+      final touristModel = await remoteDataSource.registerTourist(params.params);
       return Right(touristModel);
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));

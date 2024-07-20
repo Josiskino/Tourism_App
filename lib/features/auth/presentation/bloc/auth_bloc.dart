@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myapp/core/params/params.dart';
 import 'package:myapp/features/auth/domain/usecases/register_tourist_usecase.dart';
 import 'package:myapp/features/auth/domain/usecases/register_agency_usecase.dart';
 import 'package:myapp/features/auth/domain/usecases/login_usecase.dart';
@@ -29,11 +30,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
-    final res = await _registerTouristUseCase.call(
-      RegisterTouristParams(
-        id: event.id,
-        userId: event.userId,
-        touristName: event.touristName,
+    final res = await _registerTouristUseCase(
+      TemplateParams(
+        params: {
+          'id': event.id,
+          'userId': event.userId,
+          'touristName': event.touristName,
+        }
       ),
     );
     res.fold(
@@ -47,12 +50,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
-    final res = await _registerAgencyUseCase.call(
-      RegisterAgencyParams(
-        id: event.id,
-        userId: event.userId,
-        agencyName: event.agencyName,
-        agencyResponsibleName: event.agencyResponsibleName,
+    final res = await _registerAgencyUseCase(
+      TemplateParams(
+        params: {
+          'id': event.id,
+          'userId': event.userId,
+          'agencyName': event.agencyName,
+          'agencyResponsibleName': event.agencyResponsibleName,
+        },
       ),
     );
     res.fold(

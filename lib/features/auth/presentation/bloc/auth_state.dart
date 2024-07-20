@@ -17,3 +17,4 @@ class AuthSuccess<T> extends AuthState {
 
   AuthSuccess(this.user);
 }
+

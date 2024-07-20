@@ -1,6 +1,6 @@
 class Failure {
   final String message;
-  Failure([this.message = 'An unexpected error occurred']);
+  const Failure([this.message = 'An unexpected error occurred']);
 }
 
 class ServerFailure extends Failure {
@@ -10,3 +10,8 @@ class ServerFailure extends Failure {
 class CacheFailure extends Failure {
   CacheFailure(super.message);
 }
+
+/*class TestingFailure extends Failure {
+  TestingFailure({required String message})
+      : super(message: message);
+}*/

@@ -1,35 +1,17 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:myapp/core/error/failure.dart';
+import 'package:myapp/core/params/params.dart';
 import 'package:myapp/core/usescase.dart/usecase.dart';
 import 'package:myapp/features/auth/domain/entities/agency.dart';
-import 'package:myapp/features/auth/domain/repository/agency_repository.dart';
+import 'package:myapp/features/auth/domain/repositories/agency_repository.dart';
 
-class RegisterAgencyUseCase implements Usecase<Agency, RegisterAgencyParams> {
+class RegisterAgencyUseCase implements Usecase<Agency, TemplateParams> {
   final AgencyRepository repository;
 
   RegisterAgencyUseCase({required this.repository});
 
   @override
-  Future<Either<Failure, Agency>> call(RegisterAgencyParams params) async {
-    return await repository.registerAgency(Agency(
-      id: params.id,
-      userId: params.userId,
-      agencyName: params.agencyName,
-      agencyResponsibleName: params.agencyResponsibleName,
-    ));
+  Future<Either<Failure, Agency>> call(TemplateParams params) async {
+    return await repository.registerAgency(params);
   }
-}
-
-class RegisterAgencyParams {
-  final int id;
-  final int userId;
-  final String agencyName;
-  final String agencyResponsibleName;
-
-  RegisterAgencyParams({
-    required this.id,
-    required this.userId,
-    required this.agencyName,
-    required this.agencyResponsibleName,
-  });
 }

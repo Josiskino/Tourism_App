@@ -1,7 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:myapp/core/error/failure.dart';
 import 'package:myapp/core/usescase.dart/usecase.dart';
-import 'package:myapp/features/auth/domain/repository/auth_repository.dart';
+import 'package:myapp/features/auth/domain/repositories/auth_repository.dart';
 
 class UserSignUp implements Usecase<String, UserSignUpParams> {
   final AuthRepository authRepository;
