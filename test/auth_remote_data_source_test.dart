@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:myapp/features/auth/data/datasources/remote/auth_remote_data_source.dart';
-import 'package:retrofit/retrofit.dart';
 import 'package:myapp/features/auth/data/models/user_model.dart';
 import 'package:myapp/features/auth/data/models/tourist_model.dart';
 import 'package:myapp/features/auth/data/models/agency_model.dart';

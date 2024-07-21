@@ -10,6 +10,7 @@ import 'package:myapp/features/auth/domain/repositories/agency_repository.dart';
 import 'package:myapp/features/auth/domain/usecases/register_tourist_usecase.dart';
 import 'package:myapp/features/auth/domain/usecases/register_agency_usecase.dart';
 import 'package:myapp/features/auth/domain/usecases/login_usecase.dart';
+import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -19,12 +20,8 @@ Future<void> initDependancies() async {
   sl.registerLazySingleton(() => Dio());
 
   // Data sources
-  //sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(dio: sl()));
-
-  // Retrofit instance
-  final authRemoteDataSource = AuthRemoteDataSource(dio);
-  sl.registerLazySingleton<AuthRemoteDataSource>(() => authRemoteDataSource);
-
+  sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSource(dio));
+  
   // Repositories
   sl.registerLazySingleton<TouristRepository>(() => TouristRepositoryImpl(remoteDataSource: sl()));
   sl.registerLazySingleton<AgencyRepository>(() => AgencyRepositoryImpl(remoteDataSource: sl()));
@@ -34,4 +31,11 @@ Future<void> initDependancies() async {
   sl.registerLazySingleton(() => RegisterTouristUseCase(repository: sl()));
   sl.registerLazySingleton(() => RegisterAgencyUseCase(repository: sl()));
   sl.registerLazySingleton(() => LoginUseCase(repository: sl()));
+
+  // Bloc
+  sl.registerFactory(() => AuthBloc(
+    registerTouristUseCase: sl(),
+    registerAgencyUseCase: sl(),
+    loginUseCase: sl(),
+  ));
 }
