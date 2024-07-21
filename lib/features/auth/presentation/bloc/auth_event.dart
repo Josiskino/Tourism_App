@@ -15,14 +15,14 @@ class RegisterTouristEvent extends AuthEvent {
 }
 
 class RegisterAgencyEvent extends AuthEvent {
-  final int id;
-  final int userId;
+  final int email;
+  final String password;
   final String agencyName;
   final String agencyResponsibleName;
 
   RegisterAgencyEvent({
-    required this.id,
-    required this.userId,
+    required this.email,
+    required this.password,
     required this.agencyName,
     required this.agencyResponsibleName,
   });

@@ -34,7 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       TemplateParams(
         params: {
           'email': event.email,
-          'userId': event.password,
+          'Password': event.password,
           'touristName': event.touristName,
         }
       ),
@@ -53,8 +53,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final res = await _registerAgencyUseCase(
       TemplateParams(
         params: {
-          'id': event.id,
-          'userId': event.userId,
+          'email': event.email,
+          'password': event.password,
           'agencyName': event.agencyName,
           'agencyResponsibleName': event.agencyResponsibleName,
         },
