@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/core/params/params.dart';
 import 'package:myapp/features/auth/domain/usecases/register_tourist_usecase.dart';
