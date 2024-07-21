@@ -12,9 +12,9 @@ class TouristModel extends Tourist {
   factory TouristModel.fromJson(Map<String, dynamic> json) {
 
     return TouristModel(
-      id: json['id'],
-      user: UserModel.fromJson(json['user']),
-      touristName: json['touristName'],
+      id: json['id'] ?? '',
+      user: UserModel.fromJson(json['user'] ?? ''),
+      touristName: json['touristName'] ?? '',
     );
   }
 

@@ -5,7 +5,7 @@ import 'package:myapp/features/auth/domain/entities/agency.dart';
 
 class AgencyModel extends Agency {
 
-  AgencyModel({
+  const AgencyModel({
     required super.id,
     required super.user,
     required super.agencyName,
@@ -14,10 +14,10 @@ class AgencyModel extends Agency {
 
   factory AgencyModel.fromJson(Map<String, dynamic> json) {
     return AgencyModel(
-      id: json['id'],
-      user: UserModel.fromJson(json['user']),
+      id: json['id'] ?? '',
+      user: UserModel.fromJson(json['user'] ?? ''),
       agencyName: json['agencyName'],
-      agencyResponsibleName: json['agencyResponsibleName'],
+      agencyResponsibleName: json['agencyResponsibleName'] ?? '',
     );
   }
 
