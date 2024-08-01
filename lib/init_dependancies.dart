@@ -3,9 +3,11 @@ import 'package:dio/dio.dart';
 import 'package:myapp/features/auth/data/datasources/remote/auth_remote_data_source.dart';
 import 'package:myapp/features/auth/data/repositories/agency_repository_impl.dart';
 import 'package:myapp/features/auth/data/repositories/tourist_repository_impl.dart';
+import 'package:myapp/features/auth/data/repositories/user_repository_impl.dart';
 //import 'package:myapp/features/auth/data/repository/user_repository_impl.dart';
 import 'package:myapp/features/auth/domain/repositories/tourist_repository.dart';
 import 'package:myapp/features/auth/domain/repositories/agency_repository.dart';
+import 'package:myapp/features/auth/domain/repositories/user_repository.dart';
 //import 'package:myapp/features/auth/domain/repository/user_repository.dart';
 import 'package:myapp/features/auth/domain/usecases/register_tourist_usecase.dart';
 import 'package:myapp/features/auth/domain/usecases/register_agency_usecase.dart';
@@ -25,7 +27,7 @@ Future<void> initDependancies() async {
   // Repositories
   sl.registerLazySingleton<TouristRepository>(() => TouristRepositoryImpl(remoteDataSource: sl()));
   sl.registerLazySingleton<AgencyRepository>(() => AgencyRepositoryImpl(remoteDataSource: sl()));
-  //sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(remoteDataSource: sl()));
+  sl.registerLazySingleton<UserRepository>(() => UserRepositoryImpl(remoteDataSource: sl()));
 
   // Use cases
   sl.registerLazySingleton(() => RegisterTouristUseCase(repository: sl()));

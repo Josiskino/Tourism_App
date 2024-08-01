@@ -5,5 +5,4 @@ import '../entities/user.dart';
 
 abstract class UserRepository {
   Future<Either<Failure, User>> login(TemplateParams params);
-  Future<Either<Failure, User>> registerUser(User user);
 }

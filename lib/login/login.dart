@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myapp/core/util/show_snackbar.dart';
+import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:myapp/login/widgets/login_footer_widget.dart';
 import 'package:myapp/login/widgets/login_form_widget.dart';
 import 'package:myapp/login/widgets/login_header_widget.dart';
@@ -12,16 +15,25 @@ class LoginScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                LoginHeaderWidget(size: size),
-                const LoginForm(),
-                const LoginFooterWidget(),
-              ],
+        body: BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthFailure) {
+              showSnackBar(context, state.message);
+            } else if (state is AuthSuccess) {
+              Navigator.pushNamed(context, '/home');
+            }
+          },
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  LoginHeaderWidget(size: size),
+                  LoginForm(),
+                  const LoginFooterWidget(),
+                ],
+              ),
             ),
           ),
         ),
@@ -29,4 +41,3 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-

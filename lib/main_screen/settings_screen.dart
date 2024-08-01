@@ -4,8 +4,8 @@ import 'widgets/upgrade_section_widget.dart';
 import 'widgets/payment_section.dart';
 import 'widgets/preference_section_widget.dart';
 
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+class SettingsScreen extends StatelessWidget {
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

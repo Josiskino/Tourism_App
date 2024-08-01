@@ -8,7 +8,7 @@ ThemeData lightThemeData(BuildContext context) {
     primaryColor: AppColors.primary100Light,
     scaffoldBackgroundColor: AppColors.bg100Light,
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.primary100Light,
+      backgroundColor: AppColors.secondColors,
       iconTheme: IconThemeData(color: AppColors.bg100Light), // Texte et icônes en blanc
     ),
     iconTheme: const IconThemeData(color: AppColors.text100Light),

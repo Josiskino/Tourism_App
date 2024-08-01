@@ -5,7 +5,8 @@ class UserModel extends User {
   const UserModel({
     required super.id,
     required super.email,
-    required super.role,
+    required super.role, 
+    required super.token,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -13,6 +14,7 @@ class UserModel extends User {
       id: json['id'] ?? '',
       email: json['email'] ?? '',
       role: json['role'] ?? '',
+      token: json['token'] ?? '',
     );
   }
 
@@ -21,6 +23,7 @@ class UserModel extends User {
       'id': id,
       'email': email,
       'role': role,
+      'token': token,
     };
   }
   

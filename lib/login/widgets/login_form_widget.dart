@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/core/constants/text_strings.dart';
+import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
 
 class LoginForm extends StatelessWidget {
-  const LoginForm({
+  LoginForm({
     super.key,
   });
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +20,7 @@ class LoginForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
+              controller: emailController,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.person_outline_outlined),
                 labelText: tEmail,
@@ -28,6 +34,7 @@ class LoginForm extends StatelessWidget {
               height: 10,
             ),
             TextFormField(
+              controller: passwordController,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.fingerprint),
                 labelText: tPassword,
@@ -54,7 +61,16 @@ class LoginForm extends StatelessWidget {
               width: double.infinity,
               //height: 50,
               child: ElevatedButton(
-                onPressed: (){},
+                onPressed: () {
+                  final email = emailController.text;
+                  final password = passwordController.text;
+                  context.read<AuthBloc>().add(
+                        LoginEvent(
+                          email: email,
+                          password: password,
+                        ),
+                      );
+                },
                 child: Text(tLogin.toUpperCase()),
               ),
             ),
