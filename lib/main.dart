@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:myapp/main_screen/bloc/cubit/activities_dropdown_cubit.dart';
 import 'package:myapp/main_screen/bloc/cubit/map_cubit.dart';
 import 'package:myapp/main_screen/bloc/cubit/tab_cubit.dart';
 import 'package:myapp/main_screen/main_screen.dart';
@@ -14,7 +15,8 @@ void main() async {
   // Configure the status bar color and icons
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Color(0xFF111111), 
+      //statusBarColor: Color(0xFF111111),     
+      statusBarColor: Color(0xFFFF6600), 
       statusBarIconBrightness: Brightness.light, 
     ),
   );
@@ -39,6 +41,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<MapCubit>( 
           create: (context) => MapCubit(),
+        ),
+        BlocProvider<ActivitiesDropdownCubit>( 
+          create: (context) => ActivitiesDropdownCubit(),
         ),
       ],
       child: MaterialApp(

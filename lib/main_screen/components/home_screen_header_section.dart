@@ -17,13 +17,16 @@ class HomeScreenHeaderSection extends StatelessWidget {
               height: 40,
               width: 40,
               decoration: const BoxDecoration(
-                color: Color(0xFF2E2E2E),
+                //color: Color(0xFF2E2E2E),
+                color: Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.all(Radius.circular(30)),
               ),
               child: const Center(
                 child: Icon(
                   Icons.menu,
-                  color: Color(0xFFFF6600),
+                  //color: Color(0xFFFF6600),
+                  //color: Color(0xFFFF983F),
+                  color: Color(0xFF444648),
                   size: 24.0,
                 ),
               ),
@@ -35,13 +38,16 @@ class HomeScreenHeaderSection extends StatelessWidget {
               height: 40,
               width: 40,
               decoration: const BoxDecoration(
-                color: Color(0xFF2E2E2E),
+                //color: Color(0xFF2E2E2E),
+                color: Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.all(Radius.circular(30)),
               ),
               child: const Center(
                 child: Icon(
-                  Icons.notifications,
-                  color: Color(0xFFFF6600),
+                  Icons.notifications_outlined,
+                  //color: Color(0xFFFF6600),
+                  //color: Color(0xFFFF983F),
+                  color:Color(0xFF444648),
                   size: 24.0,
                 ),
               ),
@@ -53,7 +59,8 @@ class HomeScreenHeaderSection extends StatelessWidget {
           child: Container(
             height: 50,
             decoration: BoxDecoration(
-              color: const Color(0xFF2E2E2E),
+              //color: const Color(0xFF2E2E2E),
+              color: const Color(0xFFF5F5F5),
               borderRadius: BorderRadius.circular(40),
             ),
             child: const HomeScreenSearchBar(),          

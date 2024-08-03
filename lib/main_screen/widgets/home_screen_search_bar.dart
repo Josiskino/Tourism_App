@@ -12,7 +12,10 @@ class HomeScreenSearchBar extends StatelessWidget {
         ),
         Icon(
           Icons.search,
-          color: Color(0xFFCFCFCF),
+          //color: Color(0xFFCFCFCF),
+          //color: Color(0xFFFF6600),
+          color: Color(0xFF444648),
+
         ),
         SizedBox(
           width: 15,
@@ -20,7 +23,10 @@ class HomeScreenSearchBar extends StatelessWidget {
         Text(
           "Rechercher",
           style: TextStyle(
-            color: Color(0xFFCFCFCF),
+            //color: Color(0xFFCFCFCF),
+            //color: Color(0xFFFF6600),
+            color: Color(0xFF444648),
+
             fontSize: 16,
           ),
         ),

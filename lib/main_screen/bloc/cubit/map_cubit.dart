@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,16 +9,26 @@ part 'map_state.dart';
 
 class MapCubit extends Cubit<MapState> {
   final Location _locationController = Location();
-  
-  //MapCubit() : super(MapInitial());
+  final Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
 
-   MapCubit() : super(MapInitial()) {
+  MapCubit() : super(MapInitial()) {
     _getLocationUpdates();
   }
 
-   Future<void> _getLocationUpdates() async {
+  Future<void> _cameraToPosition(LatLng pos) async {
+    final GoogleMapController controller = await _mapController.future;
+    CameraPosition _newCameraPosition = CameraPosition(
+      target: pos,
+      zoom: 15,
+    );
+    await controller.animateCamera(
+      CameraUpdate.newCameraPosition(_newCameraPosition),
+    );
+  }
+
+  Future<void> _getLocationUpdates() async {
     emit(MapLoading());
-    
+
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
 
@@ -28,7 +40,7 @@ class MapCubit extends Cubit<MapState> {
         return;
       }
     }
-     _permissionGranted = await _locationController.hasPermission();
+    _permissionGranted = await _locationController.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await _locationController.requestPermission();
       if (_permissionGranted != PermissionStatus.granted) {
@@ -39,9 +51,10 @@ class MapCubit extends Cubit<MapState> {
 
     _locationController.onLocationChanged.listen((LocationData currentLocation) {
       if (currentLocation.latitude != null && currentLocation.longitude != null) {
-        emit(MapLoaded(currentPosition: LatLng(currentLocation.latitude!, currentLocation.longitude!)));
+        LatLng currentP = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+        emit(MapLoaded(currentPosition: currentP));
+        _cameraToPosition(currentP);
       }
     });
   }
-
 }

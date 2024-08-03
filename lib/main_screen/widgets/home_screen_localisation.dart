@@ -11,16 +11,16 @@ class HomeScreenLocalisation extends StatelessWidget {
         Text(
           "Your location",
           style: TextStyle(
-            color: Color(0xFF898989),
-            //color: c,
-            fontSize: 16,
+            //color: Color(0xFF898989),
+            color: Color(0xFFFF983F),
+            fontSize: 17,
           ),
         ),
         Text(
           "Lomé, Agoè",
           style: TextStyle(
-            color: Color(0xFFF6F6F6),
-            //color: Color(0xFFFF983F),
+            //color: Color(0xFFF6F6F6),
+            color: Color(0xFFFFFFA1),
             fontSize: 20,
           ),
         ),
