@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/core/constants/text_strings.dart';
+import 'package:myapp/core/util/screen_size.dart';
 
 class HomeScreenSearchBar extends StatelessWidget {
   const HomeScreenSearchBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       children: [
-        SizedBox(
+        const SizedBox(
           width: 15,
         ),
         Icon(
-          Icons.search,
+          Icons.location_on_outlined,
           //color: Color(0xFFCFCFCF),
-          //color: Color(0xFFFF6600),
-          color: Color(0xFF444648),
-
+          //color: Theme.of(context).colorScheme.primary,
+          color: const Color(0xFF444648),
+          size: SizeUtil.iconSize(7),
         ),
-        SizedBox(
+        const SizedBox(
           width: 15,
         ),
         Text(
-          "Rechercher",
+          tSearchBarText,
           style: TextStyle(
             //color: Color(0xFFCFCFCF),
-            //color: Color(0xFFFF6600),
-            color: Color(0xFF444648),
-
-            fontSize: 16,
+            //color: Theme.of(context).colorScheme.primary,
+            color: const Color(0xFF444648),
+            fontSize: SizeUtil.textSize(4.5),
           ),
         ),
       ],

@@ -56,7 +56,7 @@ class DetailsSiteSliverDelegate extends SliverPersistentHeaderDelegate {
             width: MediaQuery.of(context).size.width,
             height: roundedContainerHeight,
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color: Color(0xFFF5F5F5),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30),
@@ -66,7 +66,7 @@ class DetailsSiteSliverDelegate extends SliverPersistentHeaderDelegate {
               alignment: Alignment.center,
               width: 60,
               height: 5,
-              color: const Color(0xFF5F67EA),
+              color: const Color(0xFF4F4F4F),
             ),
           ),
         ),

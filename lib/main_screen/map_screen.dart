@@ -25,7 +25,7 @@ class MapScreen extends StatelessWidget {
           } else if (state is MapLoaded) {
             return FutureBuilder(
               future: Future.delayed(
-                  const Duration(seconds: 1)), // Ajoutez un délai de 1 seconde
+                  const Duration(seconds: 1),), 
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return GoogleMap(

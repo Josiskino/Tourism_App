@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/core/constants/image_strings.dart';
+import 'package:myapp/core/constants/text_strings.dart';
 
 class HomeScreenBodyImage extends StatelessWidget {
   const HomeScreenBodyImage({super.key});
@@ -10,7 +12,6 @@ class HomeScreenBodyImage extends StatelessWidget {
       child: Container(
         height: 150,
         decoration: const BoxDecoration(
-          //color: Colors.deepOrange,
           borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
         child: Stack(
@@ -19,7 +20,7 @@ class HomeScreenBodyImage extends StatelessWidget {
             ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(20)),
               child: Image.asset(
-                'assets/images/cover/cover1.jpg',
+                tHomeScreenImage,
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
@@ -30,7 +31,7 @@ class HomeScreenBodyImage extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Colors.black.withOpacity(0.7),
+                    Colors.black.withOpacity(0.6),
                      Colors.transparent
                   ],
                   begin: Alignment.bottomLeft,
@@ -49,7 +50,7 @@ class HomeScreenBodyImage extends StatelessWidget {
                     height: 52,
                     width: 150,
                     child: Text(
-                      'Découvrez des Lieux Magiques',
+                      tImageTitle,
                       style: TextStyle(
                         color: Color(0xFFFFFFA1),
                         fontSize: 19,
@@ -62,7 +63,7 @@ class HomeScreenBodyImage extends StatelessWidget {
                     height: 60,
                     width: 210,
                     child: Text(
-                      "Partez à l'aventure et créez des souvenirs inoubliables. L'évasion parfaite vous attend !",
+                      tImageSubTitle,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,

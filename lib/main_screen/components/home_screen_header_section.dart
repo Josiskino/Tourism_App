@@ -24,7 +24,7 @@ class HomeScreenHeaderSection extends StatelessWidget {
               child: const Center(
                 child: Icon(
                   Icons.menu,
-                  //color: Color(0xFFFF6600),
+                  //color: Theme.of(context).colorScheme.primary,
                   //color: Color(0xFFFF983F),
                   color: Color(0xFF444648),
                   size: 24.0,
@@ -45,9 +45,9 @@ class HomeScreenHeaderSection extends StatelessWidget {
               child: const Center(
                 child: Icon(
                   Icons.notifications_outlined,
-                  //color: Color(0xFFFF6600),
+                  //color: Theme.of(context).colorScheme.primary,
                   //color: Color(0xFFFF983F),
-                  color:Color(0xFF444648),
+                  color: Color(0xFF444648),
                   size: 24.0,
                 ),
               ),
@@ -63,8 +63,8 @@ class HomeScreenHeaderSection extends StatelessWidget {
               color: const Color(0xFFF5F5F5),
               borderRadius: BorderRadius.circular(40),
             ),
-            child: const HomeScreenSearchBar(),          
-            ),
+            child: const HomeScreenSearchBar(),
+          ),
         ),
       ],
     );

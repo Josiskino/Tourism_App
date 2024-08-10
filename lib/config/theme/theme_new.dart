@@ -5,11 +5,13 @@ import 'color_schemes.dart';
 
 ThemeData lightThemeData(BuildContext context) {
   return ThemeData.light().copyWith(
-    primaryColor: AppColors.primary100Light,
-    scaffoldBackgroundColor: AppColors.bg100Light,
+    primaryColor: AppColors.primaryColorLight,
+    primaryColorLight: AppColors.primaryColorLight,
+    scaffoldBackgroundColor: AppColors.backgroundColorLight,
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.secondColors,
-      iconTheme: IconThemeData(color: AppColors.bg100Light), // Texte et icônes en blanc
+      backgroundColor: AppColors.primaryColorLight,
+      iconTheme: IconThemeData(
+          color: AppColors.backgroundColorLight), // Texte et icônes en blanc
     ),
     iconTheme: const IconThemeData(color: AppColors.text100Light),
     textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme).apply(
@@ -17,29 +19,32 @@ ThemeData lightThemeData(BuildContext context) {
       displayColor: AppColors.text100Light,
     ),
     colorScheme: const ColorScheme.light(
-      primary: AppColors.primary100Light,
-      primaryContainer: AppColors.primary200Light,
+      onPrimaryContainer: AppColors.backgroundColorLight,
+      primary: AppColors.primaryColorLight,
+      primaryContainer: AppColors.secondaryColorLight,
+
       secondary: AppColors.accent100Light,
       secondaryContainer: AppColors.accent200Light,
-      //background: AppColors.bg100Light,
+      //background: AppColors.backgroundColorLight,
       surface: AppColors.bg200Light,
       error: Colors.red,
-      onPrimary: AppColors.bg100Light, // Texte et icônes en blanc
+      onPrimary: AppColors.backgroundColorLight, // Texte et icônes en blanc
       onSecondary: AppColors.text100Light,
       //onBackground: AppColors.text100Light,
       onSurface: AppColors.text100Light,
-      onError: AppColors.bg100Light, // Texte et icônes en blanc
+      onError: AppColors.backgroundColorLight, // Texte et icônes en blanc
     ),
   );
 }
 
 ThemeData darkThemeData(BuildContext context) {
   return ThemeData.dark().copyWith(
-    primaryColor: AppColors.primary100Dark,
+    primaryColorLight: AppColors.primary100Dark,
     scaffoldBackgroundColor: AppColors.bg100Dark,
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.primary100Dark,
-      iconTheme: IconThemeData(color: AppColors.bg100Dark), // Texte et icônes en noir
+      iconTheme:
+          IconThemeData(color: AppColors.bg100Dark), // Texte et icônes en noir
     ),
     iconTheme: const IconThemeData(color: AppColors.text100Dark),
     textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme).apply(

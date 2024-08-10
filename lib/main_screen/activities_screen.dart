@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:myapp/core/util/screen_size.dart';
 import 'package:myapp/entities/transactions.dart';
+
+import 'widgets/activity_search_bar.dart';
 
 class ActivitiesScreen extends StatelessWidget {
   const ActivitiesScreen({super.key});
@@ -12,7 +15,9 @@ class ActivitiesScreen extends StatelessWidget {
     final screenWight = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    const screenPadding = EdgeInsets.symmetric(horizontal: 14);
+    final screenPadding =
+        EdgeInsets.symmetric(horizontal: SizeUtil.spacing(3.5));
+
     final spaceBetweenItems = screenHeight * 0.03;
 
     final containerWidth = screenWight * 0.33 - 12;
@@ -28,56 +33,9 @@ class ActivitiesScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     SizedBox(
-                      height: spaceBetweenItems,
+                      height: SizeUtil.spacing(8),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          //margin: EdgeInsets.only(right: screenWight * 0.9),
-                          height: screenHeight * 0.06,
-                          width: screenWight * 0.70,
-                          child: TextField(
-                            decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                              filled: true,
-                              fillColor: const Color(0xFFF5F5F5),
-                              prefixIcon:
-                                  const Icon(Icons.search, color: Colors.grey),
-                              hintText: 'Search',
-                              hintStyle: const TextStyle(color: Colors.grey),
-                              contentPadding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: screenHeight * 0.06,
-                          width: screenWight * 0.2,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFF6600),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(
-                                Iconsax.filter,
-                                color: Color(0xFFFFFFA1),
-                              ),
-                              Text(
-                                "Filter",
-                                style: TextStyle(
-                                    color: Color(0xFFFFFFA1), fontSize: 16),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    const ActivitySearchBar(),
                     SizedBox(
                       height: spaceBetweenItems,
                     ),
@@ -388,7 +346,7 @@ class ActivitiesScreen extends StatelessWidget {
                         height: 40,
                         width: 80,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFF6600),
+                          color: Theme.of(context).colorScheme.primary,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Center(
@@ -431,14 +389,15 @@ class ActivitiesScreen extends StatelessWidget {
                             child: Row(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 05, left: 15),
+                                  padding:
+                                      const EdgeInsets.only(top: 05, left: 15),
                                   child: Container(
                                     height: 40,
                                     width: 40,
                                     decoration: BoxDecoration(
-                                      color: Colors.red[100],
-                                      borderRadius: BorderRadius.circular(30)
-                                    ),
+                                        color: Colors.red[100],
+                                        borderRadius:
+                                            BorderRadius.circular(30)),
                                     child: const Icon(
                                       Icons.arrow_downward,
                                       color: Color.fromARGB(255, 252, 23, 6),
@@ -446,16 +405,25 @@ class ActivitiesScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 10, left: 20,),
-                                  child: Text("- ${transactions[index].amountSend}"),
+                                  padding: const EdgeInsets.only(
+                                    top: 10,
+                                    left: 20,
+                                  ),
+                                  child: Text(
+                                      "- ${transactions[index].amountSend}"),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 10, left: 60,),
+                                  padding: const EdgeInsets.only(
+                                    top: 10,
+                                    left: 60,
+                                  ),
                                   child: Container(
                                     height: 25,
                                     width: 118,
                                     decoration: BoxDecoration(
-                                      color: getTransactionStatusColor(transactions[index].transactionStatus),
+                                      color: getTransactionStatusColor(
+                                          transactions[index]
+                                              .transactionStatus),
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: Row(
@@ -469,7 +437,8 @@ class ActivitiesScreen extends StatelessWidget {
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.all(2.5),
-                                          child: Text(transactions[index].transactionStatus),
+                                          child: Text(transactions[index]
+                                              .transactionStatus),
                                         ),
                                       ],
                                     ),
@@ -480,9 +449,11 @@ class ActivitiesScreen extends StatelessWidget {
                           ),
                           const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 25),
-                            child: Divider(color: Colors.grey,),
+                            child: Divider(
+                              color: Colors.grey,
+                            ),
                           ),
-                           Padding(
+                          Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 25),
                             child: Row(
                               children: [
@@ -499,7 +470,9 @@ class ActivitiesScreen extends StatelessWidget {
                           ),
                           const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 25),
-                            child: Divider(color: Colors.grey,),
+                            child: Divider(
+                              color: Colors.grey,
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 27),
@@ -511,19 +484,21 @@ class ActivitiesScreen extends StatelessWidget {
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
                                     fontSize: 16,
-                                    color: Color.fromARGB(255, 136, 143, 150),       
+                                    color: Color.fromARGB(255, 136, 143, 150),
                                   ),
                                 ),
-                                const SizedBox(height: 5,),
+                                const SizedBox(
+                                  height: 5,
+                                ),
                                 Row(
                                   children: [
                                     Container(
                                       height: 20,
                                       width: 20,
                                       decoration: BoxDecoration(
-                                        color: Colors.amber,
-                                        borderRadius: BorderRadius.circular(30)
-                                      ),
+                                          color: Colors.amber,
+                                          borderRadius:
+                                              BorderRadius.circular(30)),
                                       child: const Center(
                                         child: Text(
                                           "R",
@@ -547,42 +522,53 @@ class ActivitiesScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 17,),
+                                const SizedBox(
+                                  height: 17,
+                                ),
                                 const Text(
-                                      "PAYMENT METHOD",
-                                      style: TextStyle(
-                                        color: Color.fromARGB(255, 136, 143, 150),
-                                      ),
-                                    ),
-                                const SizedBox(height: 5,),
+                                  "PAYMENT METHOD",
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 136, 143, 150),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
                                 Row(
                                   children: [
                                     Text(
                                       transactions[index].transactionMethod!,
                                     ),
                                     const Spacer(),
-                                Text("Ref: ${transactions[index].transactionRef.toString()}")
-                            
+                                    Text(
+                                        "Ref: ${transactions[index].transactionRef.toString()}")
                                   ],
                                 ),
-                                const SizedBox(height: 14,),
+                                const SizedBox(
+                                  height: 14,
+                                ),
                                 const Text(
                                   "DATE",
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 136, 143, 150),
                                   ),
                                 ),
-                                const SizedBox(height: 5,),
+                                const SizedBox(
+                                  height: 5,
+                                ),
                                 Row(
                                   children: [
-                                    Text(transactions[index].transactionDateTime.toString())
+                                    Text(transactions[index]
+                                        .transactionDateTime
+                                        .toString())
                                   ],
                                 ),
-                            
                               ],
                             ),
                           ),
-                          const SizedBox(height: 25,)
+                          const SizedBox(
+                            height: 25,
+                          )
                         ],
                       ),
                     ),
@@ -625,16 +611,15 @@ Widget buildInitialContainer(String initials, double offset, Color color) {
   );
 }
 
- Color getTransactionStatusColor(String status) {
-    switch (status) {
-      case 'Completed':
-        return const Color.fromARGB(255, 191, 243, 193);
-      case 'Pending':
-        return const Color.fromARGB(255, 216, 213, 213);
-      case 'Failed':
-        return const Color.fromARGB(255, 243, 193, 193);
-      default:
-        return Colors.grey;
-    }
+Color getTransactionStatusColor(String status) {
+  switch (status) {
+    case 'Completed':
+      return const Color.fromARGB(255, 191, 243, 193);
+    case 'Pending':
+      return const Color.fromARGB(255, 216, 213, 213);
+    case 'Failed':
+      return const Color.fromARGB(255, 243, 193, 193);
+    default:
+      return Colors.grey;
   }
-
+}

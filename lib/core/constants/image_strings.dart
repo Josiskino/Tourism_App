@@ -12,8 +12,18 @@ const String tLoginScreenImage = "";
 
 // -- Register Screen Images
 // -- also used in Login & SignUp
-const String tRegisterScreenImage = "assets/images/login_register_pages/welcome_image.png";
+const String tRegisterScreenImage =
+    "assets/images/login_register_pages/welcome_image.png";
 
 // --Google Logo image
-const String tGoogleLogoImage = "assets/images/login_register_pages/google_logo.png";
+const String tGoogleLogoImage =
+    "assets/images/login_register_pages/google_logo.png";
 
+//--Home Screen Image
+const String tHomeScreenImage = "assets/images/cover/cover2.jpg";
+
+//--Profil Image
+const String tProfilImage1 = "assets/images/profil/profil1.jpg";
+const String tProfilImage2 = "assets/images/profil/profil2.jpg";
+const String tProfilImage3 = "assets/images/profil/profil3.jpg";
+const String tProfilImage4 = "assets/images/profil/profil4.jpg";

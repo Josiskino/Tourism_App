@@ -16,9 +16,9 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
-           // color: const Color(0xFF111111),
+           // color: const Color(0xFF111111), 
            //Color(0xFFCCCCCC)
-           color: const Color(0xFFFF6600),
+           color: Theme.of(context).colorScheme.primary,
             child:  Column(
               //Pour toute l'interface
               children: [

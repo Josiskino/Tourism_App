@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/core/constants/colors.dart';
 
 class CustomBottomAppBar extends StatelessWidget {
-
   final Color selectedColor;
   final Color unSelectedColor;
   final Function(int index) onTap;
@@ -10,12 +8,12 @@ class CustomBottomAppBar extends StatelessWidget {
   final int selectedTab;
 
   const CustomBottomAppBar({
-    super.key, 
-    required this.selectedColor, 
-    required this.unSelectedColor, 
-    required this.onTap, 
+    super.key,
+    required this.selectedColor,
+    required this.unSelectedColor,
+    required this.onTap,
     required this.children,
-     required this.selectedTab
+    required this.selectedTab,
   });
 
   @override
@@ -79,12 +77,14 @@ class CustomBottomAppBarItem extends StatelessWidget {
       message: text,
       child: TextButton(
         style: TextButton.styleFrom(
-          foregroundColor: kprimaryColor,
+          foregroundColor: Theme.of(context).colorScheme.primary,
         ),
         onPressed: press,
         child: Icon(
           icon,
-          color: color == kprimaryColor ? kprimaryColor : Colors.grey.shade300,
+          color: color == Theme.of(context).colorScheme.primary
+              ? Theme.of(context).colorScheme.primary
+              : Colors.grey.shade300,
         ),
       ),
     );
