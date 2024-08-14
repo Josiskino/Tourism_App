@@ -1,21 +1,56 @@
-import 'package:dio/dio.dart';
-import 'package:retrofit/retrofit.dart';
-import 'package:myapp/features/auth/data/models/user_model.dart';
+import 'package:myapp/core/util/api_response.dart';
 import 'package:myapp/features/auth/data/models/tourist_model.dart';
 import 'package:myapp/features/auth/data/models/agency_model.dart';
 
-part 'auth_remote_data_source.g.dart';
+import '../../../../../core/services/api_client.dart';
+import '../../models/user_type.dart';
 
-@RestApi(baseUrl: "http://127.0.0.1:8000/api/V1")
-abstract class AuthRemoteDataSource {
-  factory AuthRemoteDataSource(Dio dio, {String baseUrl}) = _AuthRemoteDataSource;
+class AuthRemoteDataSource {
+  final ApiClient apiClient;
 
-  @POST("/register/tourist")
-  Future<TouristModel> registerTourist(@Body() Map<String, dynamic> body);
+  AuthRemoteDataSource({required this.apiClient});
 
-  @POST("/register/agency")
-  Future<AgencyModel> registerAgency(@Body() Map<String, dynamic> body);
+    Future<ApiResponse<UserType>> login(Map<String, dynamic> body) async {
+    final response = await apiClient.postRequest(
+      path: "login",
+      data: body,
+    );
 
-  @POST("/login")
-  Future<UserModel> login(@Body() Map<String, dynamic> body);
+    final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
+
+    if (responseData['role'] == 'tourist') {
+      return ApiResponse.success(
+        UserType(
+          userModel: TouristModel.fromJson(responseData['tourist']),
+          userType: 'tourist',
+        ),
+      );
+    } else if (responseData['role'] == 'agency') {
+      return ApiResponse.success(
+        UserType(
+          userModel: AgencyModel.fromJson(responseData['agency']),
+          userType: 'agency',
+        ),
+      );
+    } else {
+      return ApiResponse.error("Unknown user role", 400);
+    }
+  }
+
+ Future<ApiResponse<void>> registerTourist(Map<String, dynamic> body) async {
+    final response = await apiClient.postRequest(
+      path: "register/tourist",
+      data: body,
+    );
+    return ApiResponse<void>.fromResponse(response, (_) {});
+  }
+
+  Future<ApiResponse<void>> registerAgency(Map<String, dynamic> body) async {
+    final response = await apiClient.postRequest(
+      path: "register/agency",
+      data: body,
+    );
+    return ApiResponse<void>.fromResponse(response, (_) {});
+  }
+
 }

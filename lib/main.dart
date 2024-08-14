@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/core/util/screen_size.dart';
 import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:myapp/login/login.dart';
 import 'package:myapp/main_screen/bloc/cubit/activities_dropdown_cubit.dart';
 import 'package:myapp/main_screen/bloc/cubit/map_cubit.dart';
 import 'package:myapp/main_screen/bloc/cubit/tab_cubit.dart';
@@ -23,7 +24,7 @@ void main() async {
     ),
   );
 
-  await di.initDependancies();
+  await di.initDependencies();
 
   runApp(const MyApp());
 }
@@ -62,7 +63,8 @@ class MyApp extends StatelessWidget {
                 theme: lightThemeData(context),
                 darkTheme: darkThemeData(context),
                 themeMode: ThemeMode.system,
-                home: MainScreen(),
+                //home: MainScreen(),
+                home: const LoginScreen(),
               ),
             );
           },

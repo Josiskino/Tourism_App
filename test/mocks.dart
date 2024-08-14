@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:mockito/annotations.dart';
 import 'package:myapp/features/auth/data/datasources/remote/auth_remote_data_source.dart';
 import 'package:myapp/features/auth/domain/repositories/tourist_repository.dart';
-import 'package:myapp/features/auth/domain/usecases/login_usecase.dart';
 import 'package:myapp/features/auth/domain/usecases/register_agency_usecase.dart';
 import 'package:myapp/features/auth/domain/usecases/register_tourist_usecase.dart';
 
@@ -12,6 +11,5 @@ import 'package:myapp/features/auth/domain/usecases/register_tourist_usecase.dar
   TouristRepository, 
   RegisterTouristUseCase, 
   RegisterAgencyUseCase, 
-  LoginUseCase,
 ])
 void main() {}

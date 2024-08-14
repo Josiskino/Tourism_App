@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/core/params/params.dart';
 import 'package:myapp/features/auth/domain/usecases/register_tourist_usecase.dart';
 import 'package:myapp/features/auth/domain/usecases/register_agency_usecase.dart';
-import 'package:myapp/features/auth/domain/usecases/login_usecase.dart';
+import 'package:myapp/features/auth/domain/usecases/login_tourist_usecase.dart';
+import 'package:myapp/features/auth/domain/usecases/login_agency_usecase.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -11,15 +12,18 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final RegisterTouristUseCase _registerTouristUseCase;
   final RegisterAgencyUseCase _registerAgencyUseCase;
-  final LoginUseCase _loginUseCase;
+  final LoginTouristUseCase _loginTouristUseCase;
+  final LoginAgencyUseCase _loginAgencyUseCase;
 
   AuthBloc({
     required RegisterTouristUseCase registerTouristUseCase,
     required RegisterAgencyUseCase registerAgencyUseCase,
-    required LoginUseCase loginUseCase,
+    required LoginTouristUseCase loginTouristUseCase,
+    required LoginAgencyUseCase loginAgencyUseCase,
   })  : _registerTouristUseCase = registerTouristUseCase,
         _registerAgencyUseCase = registerAgencyUseCase,
-        _loginUseCase = loginUseCase,
+        _loginTouristUseCase = loginTouristUseCase,
+        _loginAgencyUseCase = loginAgencyUseCase,
         super(AuthInitial()) {
     on<RegisterTouristEvent>(_onRegisterTouristEvent);
     on<RegisterAgencyEvent>(_onRegisterAgencyEvent);
@@ -35,14 +39,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       TemplateParams(
         params: {
           'email': event.email,
-          'Password': event.password,
+          'password': event.password,
           'touristName': event.touristName,
         }
       ),
     );
     res.fold(
       (failure) => emit(AuthFailure(failure.message)),
-      (tourist) => emit(AuthSuccess(tourist)),
+      (_) => emit(const AuthSuccess(null)), // Vous pouvez ajuster en fonction de ce que vous voulez retourner
     );
   }
 
@@ -63,7 +67,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     res.fold(
       (failure) => emit(AuthFailure(failure.message)),
-      (agency) => emit(AuthSuccess(agency)),
+      (_) => emit(const AuthSuccess(null)), // Vous pouvez ajuster en fonction de ce que vous voulez retourner
     );
   }
 
@@ -72,7 +76,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
-    final res = await _loginUseCase(
+    final res = await _loginTouristUseCase(
       TemplateParams(
         params: {
           'email': event.email,
