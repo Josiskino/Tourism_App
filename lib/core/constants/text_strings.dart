@@ -20,5 +20,9 @@ const String tImageSubTitle =
 const String tIndicativeCategoryText = 'Explore Places';
 
 
-//--Setting Screen Text
+// --Setting Screen Text
 const String tSettingTitle = "Settings";
+
+// -- Sign Up Screen Text
+const String tSignUpTitle = "Get On Board!";
+const String tSignUpSubtitle = "Create your profile to start your journey.";

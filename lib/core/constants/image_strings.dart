@@ -27,3 +27,7 @@ const String tProfilImage1 = "assets/images/profil/profil1.jpg";
 const String tProfilImage2 = "assets/images/profil/profil2.jpg";
 const String tProfilImage3 = "assets/images/profil/profil3.jpg";
 const String tProfilImage4 = "assets/images/profil/profil4.jpg";
+
+//--Trip Screen Images
+const String tTripScreenImage1 = "assets/images/trip/cover/tripImg1.jpeg";
+

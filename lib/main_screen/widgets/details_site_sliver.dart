@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/core/util/screen_size.dart';
 import 'package:myapp/entities/sites.dart';
 
 class DetailsSiteSliverDelegate extends SliverPersistentHeaderDelegate {
@@ -27,24 +28,50 @@ class DetailsSiteSliverDelegate extends SliverPersistentHeaderDelegate {
           ),
         ),
         Positioned(
-          child: GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: Container(
-              margin: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top,
-                left: 25,
-                right: 25,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: Container(
+                  padding: EdgeInsets.all(SizeUtil.spacing(2)),
+                  margin: EdgeInsets.only(
+                    top: SizeUtil.screenHeight * 0.06,
+                    left: 15,
+                    right: 20,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.arrow_back_ios_new_outlined,
+                    color: Colors.white,
+                  ),
+                ),
               ),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.5),
-                shape: BoxShape.circle,
+              GestureDetector(
+                onTap: () {
+                  
+                },
+                child: Container(
+                  padding: EdgeInsets.all(SizeUtil.spacing(2)),
+                  margin: EdgeInsets.only(
+                    top: SizeUtil.screenHeight * 0.06,
+                    left: 15,
+                    right: 20,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.favorite_border_outlined,
+                    color: Colors.white,
+                  ),
+                ),
               ),
-              child: const Icon(
-                Icons.arrow_back_ios_new_outlined,
-                color: Colors.white,
-              ),
-            ),
+            ],
           ),
         ),
         Positioned(

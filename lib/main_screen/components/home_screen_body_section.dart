@@ -184,13 +184,12 @@ class HomeScreenBodySection extends StatelessWidget {
                                 right: 10,
                                 child: GestureDetector(
                                   onTap: () {
-                                    // Action pour le like, par exemple, ajouter ou retirer un like
+                                   
                                   },
                                   child: Icon(
                                     Icons.favorite_border, // Icône de like vide
                                     color: Colors.white, // Couleur de l'icône
-                                    size: SizeUtil.textSize(
-                                        6), // Taille de l'icône
+                                    size: SizeUtil.textSize(6),
                                   ),
                                 ),
                               ),

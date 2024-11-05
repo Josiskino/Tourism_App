@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myapp/profil/profil_screen.dart';
 import '../core/constants/text_strings.dart';
 import '../core/util/screen_size.dart';
 import 'bloc/cubit/settings_toggle_button_cubit.dart';
@@ -41,6 +42,12 @@ class SettingsScreen extends StatelessWidget {
                   icon: Icons.person,
                   title: "Profil utilisateur",
                   subtitle: "Modifier les informations du profil",
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ProfilScreen()),
+                    );
+                  },
                 ),
                 _buildSettingRow(
                   icon: Icons.settings,
@@ -134,7 +141,8 @@ class SettingsScreen extends StatelessWidget {
                   title: "Changer le mot de passe",
                   subtitle: "Modifier votre mot de passe",
                 ),
-                BlocBuilder<SettingsToggleButtonCubit, SettingsToggleButtonState>(
+                BlocBuilder<SettingsToggleButtonCubit,
+                    SettingsToggleButtonState>(
                   builder: (context, state) {
                     return _buildSettingRow(
                       icon: Icons.security,
@@ -182,6 +190,79 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
+//   Widget _buildSettingRow({
+//     required IconData icon,
+//     required String title,
+//     required String subtitle,
+//     bool isSwitch = false,
+//     bool value = false,
+//     ValueChanged<bool>? onChanged,
+//     Color switchOnColor = Colors.transparent,
+//     Color switchOffColor = Colors.transparent,
+//     Color switchBorderColor = Colors.transparent,
+//     Color buttonColor = Colors.transparent,
+//   }) {
+//     return Padding(
+//       padding: const EdgeInsets.symmetric(vertical: 8.0),
+//       child: Row(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Row(
+//             children: [
+//               Container(
+//                 height: SizeUtil.heightPercentage(6.5),
+//                 width: SizeUtil.widthPercentage(11),
+//                 decoration: BoxDecoration(
+//                   color: const Color(0xFFF5F5F5),
+//                   borderRadius: BorderRadius.circular(30),
+//                 ),
+//                 child: Icon(
+//                   icon,
+//                   color: const Color(0xFF444648),
+//                 ),
+//               ),
+//               SizedBox(width: SizeUtil.iconSize(3)),
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text(
+//                     title,
+//                     style: TextStyle(
+//                       color: const Color(0xFF1D1F21),
+//                       fontSize: SizeUtil.textSize(3.5),
+//                       fontWeight: FontWeight.bold,
+//                     ),
+//                   ),
+//                   SizedBox(
+//                     width: SizeUtil.widthPercentage(60),
+//                     child: Text(
+//                       subtitle,
+//                       style: const TextStyle(
+//                         color: Colors.grey,
+//                         fontSize: 14,
+//                       ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ],
+//           ),
+//           if (isSwitch)
+//             Switch(
+//               value: value,
+//               onChanged: onChanged,
+//               activeColor: switchOnColor,
+//               inactiveThumbColor: const Color(0xFF444648),
+//               inactiveTrackColor: const Color(0xFFF5F5F5),
+//               activeTrackColor: switchBorderColor,
+//             ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
   Widget _buildSettingRow({
     required IconData icon,
     required String title,
@@ -193,63 +274,73 @@ class SettingsScreen extends StatelessWidget {
     Color switchOffColor = Colors.transparent,
     Color switchBorderColor = Colors.transparent,
     Color buttonColor = Colors.transparent,
+    VoidCallback? onTap, // Nouveau paramètre pour la fonction de navigation
   }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Container(
-                height: SizeUtil.heightPercentage(6.5),
-                width: SizeUtil.widthPercentage(11),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF5F5F5),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Icon(
-                  icon,
-                  color: const Color(0xFF444648),
-                ),
-              ),
-              SizedBox(width: SizeUtil.iconSize(3)),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: const Color(0xFF1D1F21),
-                      fontSize: SizeUtil.textSize(3.5),
-                      fontWeight: FontWeight.bold,
-                    ),
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Container(
+                  height: SizeUtil.heightPercentage(6.5),
+                  width: SizeUtil.widthPercentage(11),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF5F5F5),
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  SizedBox(
-                    width: SizeUtil.widthPercentage(60),
-                    child: Text(
-                      subtitle,
-                      style: const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
+                  child: Icon(
+                    icon,
+                    color: const Color(0xFF444648),
+                  ),
+                ),
+                SizedBox(width: SizeUtil.iconSize(3)),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: const Color(0xFF1D1F21),
+                        fontSize: SizeUtil.textSize(3.5),
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          if (isSwitch)
-            Switch(
-              value: value,
-              onChanged: onChanged,
-              activeColor: switchOnColor,
-              inactiveThumbColor: const Color(0xFF444648),
-              inactiveTrackColor: const Color(0xFFF5F5F5),
-              activeTrackColor: switchBorderColor,
+                    SizedBox(
+                      width: SizeUtil.widthPercentage(60),
+                      child: Text(
+                        subtitle,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-        ],
+            if (isSwitch)
+              Switch(
+                value: value,
+                onChanged: onChanged,
+                activeColor: switchOnColor,
+                inactiveThumbColor: const Color(0xFF444648),
+                inactiveTrackColor: const Color(0xFFF5F5F5),
+                activeTrackColor: switchBorderColor,
+              )
+            else
+              const Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.grey,
+                size: 16,
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-import '../../features/auth/data/datasources/remote/api_endpoint_urls.dart';
-import '../../features/auth/data/datasources/remote/api_exception.dart';
+import '../constants/api_endpoint_urls.dart';
+import '../util/api_exception.dart';
 
 class ApiClient {
   final Dio dio;
@@ -32,7 +32,8 @@ class ApiClient {
       debugPrint(e.response!.headers.toString());
       debugPrint(e.response!.requestOptions.toString());
       throw ApiException(
-          message: e.response!.statusMessage ?? 'Erreur inconnue');
+        message: e.response!.statusMessage ?? 'Erreur inconnue',
+      );
     } else {
       debugPrint(e.requestOptions.toString());
       debugPrint(e.message);
@@ -74,7 +75,7 @@ class ApiClient {
 
     try {
       // Log the request with dynamic body
-      _logRequest("POST", path, data); 
+      _logRequest("POST", path, data);
       final response = await dio.post(path, data: data, options: options);
       _logResponse(response);
 

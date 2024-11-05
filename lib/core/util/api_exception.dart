@@ -7,8 +7,10 @@ class ApiException implements Exception {
   @override
   String toString() {
     if (message is String) {
-      return 'Error: $message';
+      //return 'Error: $message';
+      return '$message';
     }
-    return 'Error: $message, Status Code: $statusCode';
+    // return 'Error: $message, Status Code: $statusCode';
+    return '$message, $statusCode';
   }
 }

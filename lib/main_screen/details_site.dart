@@ -6,6 +6,7 @@ import 'package:myapp/core/constants/image_strings.dart';
 import 'package:myapp/core/util/screen_size.dart';
 import 'package:myapp/entities/sites.dart';
 import 'package:myapp/main_screen/widgets/details_site_sliver.dart';
+import 'package:readmore/readmore.dart';
 
 class DetailsSite extends StatelessWidget {
   const DetailsSite(this.sites, {super.key});
@@ -15,7 +16,7 @@ class DetailsSite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWight = MediaQuery.of(context).size.width;
-    
+
     final Completer<GoogleMapController> _mapController =
         Completer<GoogleMapController>();
     const LatLng _pSogbossito = LatLng(6.2089, 1.2130);
@@ -24,7 +25,7 @@ class DetailsSite extends StatelessWidget {
     final bottomContainerWidth = SizeUtil.widthPercentage(100);
 
     final bookingBtnHeight = bottomContainerHeight * 0.7;
-    final bookingBtnWidth = bottomContainerWidth * 0.65;
+    final bookingBtnWidth = bottomContainerWidth * 0.40;
 
     return Scaffold(
       bottomNavigationBar: Container(
@@ -35,6 +36,27 @@ class DetailsSite extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
           children: [
+            SizedBox(
+              height: bottomContainerHeight * 0.7,
+              width: bottomContainerWidth * 0.33,
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.circular(10),
+              //   border: Border.all(
+              //     color: const Color(0xFFFF983F),
+              //     width: 1,
+              //   ),
+              // ),
+              child: Center(
+                child: Text(
+                  sites.price.isNotEmpty ? "${sites.price} / person" : "FREE",
+                  style: TextStyle(
+                    color: const Color(0xFF1D1F21),
+                    fontWeight: FontWeight.bold,
+                    fontSize: SizeUtil.textSize(4),
+                  ),
+                ),
+              ),
+            ),
             Container(
               height: bookingBtnHeight,
               width: bookingBtnWidth,
@@ -50,23 +72,6 @@ class DetailsSite extends StatelessWidget {
                     fontSize: SizeUtil.textSize(5),
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-              ),
-            ),
-            Container(
-              height: bottomContainerHeight * 0.7,
-              width: bottomContainerWidth * 0.20,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: const Color(0xFFFF983F),
-                  width: 1,
-                ),
-              ),
-              child: const Center(
-                child: Icon(
-                  Icons.favorite_outline,
-                  color: Color(0xFFFF983F),
                 ),
               ),
             ),
@@ -111,7 +116,7 @@ class DetailsSite extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                 Icon(
+                                Icon(
                                   Icons.location_on_outlined,
                                   color: const Color(0xFF1D1F21),
                                   size: SizeUtil.iconSize(5),
@@ -130,26 +135,26 @@ class DetailsSite extends StatelessWidget {
                             )
                           ],
                         ),
-                        Container(
-                          height: SizeUtil.heightPercentage(6),
-                          width: SizeUtil.widthPercentage(30),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFF983F),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Center(
-                            child: Text(
-                              sites.price.isNotEmpty
-                                  ? "XOF ${sites.price}"
-                                  : "FREE",
-                              style: TextStyle(
-                                color: const Color(0xFFFFFFA1),
-                                fontWeight: FontWeight.bold,
-                                fontSize: SizeUtil.textSize(4),
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   height: SizeUtil.heightPercentage(6),
+                        //   width: SizeUtil.widthPercentage(30),
+                        //   decoration: BoxDecoration(
+                        //     color: const Color(0xFFFF983F),
+                        //     borderRadius: BorderRadius.circular(10),
+                        //   ),
+                        //   child: Center(
+                        //     child: Text(
+                        //       sites.price.isNotEmpty
+                        //           ? "XOF ${sites.price}"
+                        //           : "FREE",
+                        //       style: TextStyle(
+                        //         color: const Color(0xFFFFFFA1),
+                        //         fontWeight: FontWeight.bold,
+                        //         fontSize: SizeUtil.textSize(4),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                     SizedBox(
@@ -162,9 +167,12 @@ class DetailsSite extends StatelessWidget {
                           height: SizeUtil.heightPercentage(6.5),
                           child: Stack(
                             children: [
-                               buildProfilePicture(const AssetImage(tProfilImage1), 0),
-                               buildProfilePicture(const AssetImage(tProfilImage2), 18),
-                               buildProfilePicture(const AssetImage(tProfilImage3), 39),
+                              buildProfilePicture(
+                                  const AssetImage(tProfilImage1), 0),
+                              buildProfilePicture(
+                                  const AssetImage(tProfilImage2), 18),
+                              buildProfilePicture(
+                                  const AssetImage(tProfilImage3), 39),
                             ],
                           ),
                         ),
@@ -183,38 +191,56 @@ class DetailsSite extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                         Text(
+                        Text(
                           "Description",
                           style: TextStyle(
-                          fontSize: SizeUtil.textSize(5.5),
-                          color: const Color(0xFF1D1F21), 
-                          fontWeight: FontWeight.bold,
-                         ),
+                            fontSize: SizeUtil.textSize(5.5),
+                            color: const Color(0xFF1D1F21),
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        Text(
+                        ReadMoreText(
                           sites.description.isNotEmpty
                               ? sites.description
                               : "Description non disponible.",
                           style: const TextStyle(
-                              fontSize: 16, 
-                              color: Color(0xFF1D1F21),
+                            fontSize: 16, // Taille du texte de la description
+                            color: Colors.black,
+                          ),
+                          trimMode: TrimMode.Line,
+                          trimLines: 5,
+                          colorClickableText: const Color(0xFFFF983F),
+                          trimCollapsedText: 'Show more',
+                          trimExpandedText: 'Show less',
+                          moreStyle: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF1D1F21),
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
+                        // Text(
+                        //   sites.description.isNotEmpty
+                        //       ? sites.description
+                        //       : "Description non disponible.",
+                        //   style: const TextStyle(
+                        //     fontSize: 16,
+                        //     color: Color(0xFF1D1F21),
+                        //   ),
+                        // ),
                       ],
                     ),
-                     SizedBox(
+                    SizedBox(
                       height: SizeUtil.spacing(3.5),
                     ),
                     const Text(
                       "Location",
-                      style:
-                          TextStyle(
-                            fontSize: 18, 
-                            color: Color(0xFF1D1F21),
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Color(0xFF1D1F21),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                     SizedBox(
+                    SizedBox(
                       height: SizeUtil.spacing(3),
                     ),
                     ClipRRect(
@@ -253,7 +279,7 @@ class DetailsSite extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                   ],
                 ),
               ),
@@ -273,10 +299,10 @@ Widget buildProfilePicture(ImageProvider imageProvider, double offset) {
       width: 45,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: Colors.white, width: 2), 
+        border: Border.all(color: Colors.white, width: 2),
         image: DecorationImage(
           image: imageProvider,
-          fit: BoxFit.cover, 
+          fit: BoxFit.cover,
         ),
       ),
     ),

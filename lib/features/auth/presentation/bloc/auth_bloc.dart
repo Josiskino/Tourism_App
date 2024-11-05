@@ -36,17 +36,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     final res = await _registerTouristUseCase(
-      TemplateParams(
-        params: {
-          'email': event.email,
-          'password': event.password,
-          'touristName': event.touristName,
-        }
-      ),
+      TemplateParams(params: {
+        'email': event.email,
+        'password': event.password,
+        'touristName': event.touristName,
+      }),
     );
     res.fold(
       (failure) => emit(AuthFailure(failure.message)),
-      (_) => emit(const AuthSuccess(null)), // Vous pouvez ajuster en fonction de ce que vous voulez retourner
+      (_) => emit(const AuthSuccess(
+          null)), // Vous pouvez ajuster en fonction de ce que vous voulez retourner
     );
   }
 
@@ -67,7 +66,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     res.fold(
       (failure) => emit(AuthFailure(failure.message)),
-      (_) => emit(const AuthSuccess(null)), // Vous pouvez ajuster en fonction de ce que vous voulez retourner
+      (_) => emit(const AuthSuccess(
+          null)), // Vous pouvez ajuster en fonction de ce que vous voulez retourner
     );
   }
 
@@ -86,7 +86,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
     res.fold(
       (failure) => emit(AuthFailure(failure.message)),
-      (user) => emit(AuthSuccess(user)),
+      (tourist) {
+        if (tourist.role == "tourist") {
+          emit(AuthSuccess(tourist));
+        } else {
+          emit(const AuthFailure("User role not recognized"));
+        }
+      },
     );
   }
 }

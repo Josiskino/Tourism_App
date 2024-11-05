@@ -18,14 +18,14 @@ class AuthRemoteDataSource {
 
     final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
 
-    if (responseData['role'] == 'tourist') {
+    if (responseData['tourist']['role'] == 'tourist') {
       return ApiResponse.success(
         UserType(
           userModel: TouristModel.fromJson(responseData['tourist']),
           userType: 'tourist',
         ),
       );
-    } else if (responseData['role'] == 'agency') {
+    } else if (responseData['tourist']['role'] == 'agency') {
       return ApiResponse.success(
         UserType(
           userModel: AgencyModel.fromJson(responseData['agency']),

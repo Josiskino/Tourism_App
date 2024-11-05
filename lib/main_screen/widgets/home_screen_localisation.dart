@@ -18,13 +18,29 @@ class HomeScreenLocalisation extends StatelessWidget {
             fontSize: SizeUtil.textSize(5.5),
           ),
         ),
-         Text(
-          tCurrentLocation,
-          style: TextStyle(
-            //color: Color(0xFFF6F6F6),
-            color: Color(0xFFFFFFA1),
-            fontSize: SizeUtil.textSize(6),
-          ),
+        Row(
+          children: [
+            Text(
+              tCurrentLocation,
+              style: TextStyle(
+                //color: Color(0xFFF6F6F6),
+                color: const Color(0xFFFFFFA1),
+                fontSize: SizeUtil.textSize(6),
+              ),
+            ),
+            SizedBox(
+              height: 45,
+              width: 45,
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.arrow_drop_down,
+                  color: Color(0xFFFFFFA1),
+                  size: 30,
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

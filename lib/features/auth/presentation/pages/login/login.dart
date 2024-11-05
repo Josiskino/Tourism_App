@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/core/util/show_snackbar.dart';
 import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:myapp/login/widgets/login_footer_widget.dart';
-import 'package:myapp/login/widgets/login_form_widget.dart';
-import 'package:myapp/login/widgets/login_header_widget.dart';
+
+import 'widgets/login_footer_widget.dart';
+import 'widgets/login_form_widget.dart';
+import 'widgets/login_header_widget.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
