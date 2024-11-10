@@ -14,7 +14,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final RegisterTouristUseCase _registerTouristUseCase;
   final RegisterAgencyUseCase _registerAgencyUseCase;
   final LoginTouristUseCase _loginTouristUseCase;
-  final LoginAgencyUseCase _loginAgencyUseCase;
+  //final LoginAgencyUseCase _loginAgencyUseCase;
 
   AuthBloc({
     required RegisterTouristUseCase registerTouristUseCase,
@@ -24,7 +24,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   })  : _registerTouristUseCase = registerTouristUseCase,
         _registerAgencyUseCase = registerAgencyUseCase,
         _loginTouristUseCase = loginTouristUseCase,
-        _loginAgencyUseCase = loginAgencyUseCase,
+        //_loginAgencyUseCase = loginAgencyUseCase,
         super(AuthInitial()) {
     on<RegisterTouristEvent>(_onRegisterTouristEvent);
     on<RegisterAgencyEvent>(_onRegisterAgencyEvent);

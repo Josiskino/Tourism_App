@@ -16,7 +16,7 @@ class LoginScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     return SafeArea(
-      child: Scaffold(  
+      child: Scaffold(
         body: BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is AuthFailure) {
@@ -24,22 +24,31 @@ class LoginScreen extends StatelessWidget {
             } else if (state is AuthSuccess) {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) =>  MainScreen()),
+                MaterialPageRoute(builder: (context) => MainScreen()),
               );
             }
           },
-          child: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  LoginHeaderWidget(size: size),
-                  LoginForm(),
-                  const LoginFooterWidget(),
-                ],
-              ),
-            ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+              return SingleChildScrollView(
+                padding: EdgeInsets.only(bottom: keyboardHeight),
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight - keyboardHeight,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      LoginHeaderWidget(size: size),
+                      const LoginForm(),
+                      const LoginFooterWidget(),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),

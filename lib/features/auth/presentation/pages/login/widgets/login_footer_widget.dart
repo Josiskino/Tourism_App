@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:myapp/core/constants/image_strings.dart';
-import 'package:myapp/core/services/api_client.dart';
-import 'package:myapp/core/constants/api_endpoint_urls.dart';
+//import 'package:myapp/core/services/api_client.dart';
+//import 'package:myapp/core/constants/api_endpoint_urls.dart';
 import 'package:myapp/features/auth/presentation/pages/signup/signup.dart';
 
 import '../../../../../../core/constants/text_strings.dart';
@@ -19,7 +19,7 @@ class LoginFooterWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text('Or'),
+        //const Text('Or'),
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
