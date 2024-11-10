@@ -28,6 +28,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
   // Function to submit the form
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
+        
       // Save the form and perform update action
       _formKey.currentState!.save();
       

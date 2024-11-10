@@ -69,8 +69,8 @@ class MyApp extends StatelessWidget {
                 darkTheme: darkThemeData(context),
                 themeMode: ThemeMode.system,
                 //home: const Calendar(),
-                home: MainScreen(),
-                //home: const LoginScreen(),
+                //home: MainScreen(),
+                home: const LoginScreen(),
                 
                 //home: OnboardScreen(),
                 //home: const TripScreen(),

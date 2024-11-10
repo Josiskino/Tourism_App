@@ -3,13 +3,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/core/constants/text_strings.dart';
 import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
 
-class LoginForm extends StatelessWidget {
-  LoginForm({
-    super.key,
-  });
+class LoginForm extends StatefulWidget {
+  const LoginForm({Key? key}) : super(key: key);
 
+  @override
+  _LoginFormState createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  // Initialisation des contrôleurs de texte
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Nettoyage des contrôleurs lors de la suppression du widget
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +42,7 @@ class LoginForm extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             TextFormField(
               controller: passwordController,
               decoration: InputDecoration(
@@ -43,13 +53,12 @@ class LoginForm extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 suffixIcon: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.remove_red_eye_sharp)),
+                  onPressed: () {},
+                  icon: const Icon(Icons.remove_red_eye_sharp),
+                ),
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 2),
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
@@ -59,11 +68,11 @@ class LoginForm extends StatelessWidget {
             ),
             SizedBox(
               width: double.infinity,
-              //height: 50,
               child: ElevatedButton(
                 onPressed: () {
                   final email = emailController.text;
                   final password = passwordController.text;
+                  
                   context.read<AuthBloc>().add(
                         LoginEvent(
                           email: email,

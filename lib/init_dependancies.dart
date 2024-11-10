@@ -21,11 +21,13 @@ import 'core/constants/api_constant.dart';
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
+  
   // External
   sl.registerLazySingleton<Dio>(
     () => Dio(
       BaseOptions(
         baseUrl: ApiConstant.baseUrl,
+        responseType: ResponseType.json,
       ),
     ),
   );
@@ -42,6 +44,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<TouristRepository>(
     () => TouristRepositoryImpl(remoteDataSource: sl()),
   );
+
   sl.registerLazySingleton<AgencyRepository>(
     () => AgencyRepositoryImpl(remoteDataSource: sl()),
   );

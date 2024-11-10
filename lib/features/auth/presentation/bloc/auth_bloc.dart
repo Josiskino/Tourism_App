@@ -10,6 +10,7 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+
   final RegisterTouristUseCase _registerTouristUseCase;
   final RegisterAgencyUseCase _registerAgencyUseCase;
   final LoginTouristUseCase _loginTouristUseCase;
@@ -45,7 +46,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     res.fold(
       (failure) => emit(AuthFailure(failure.message)),
       (_) => emit(const AuthSuccess(
-          null)), // Vous pouvez ajuster en fonction de ce que vous voulez retourner
+          null),), // Vous pouvez ajuster en fonction de ce que vous voulez retourner
     );
   }
 
