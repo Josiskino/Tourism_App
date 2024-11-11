@@ -25,7 +25,7 @@ class SettingsScreen extends StatelessWidget {
                 Text(
                   tSettingTitle,
                   style: TextStyle(
-                    fontSize: SizeUtil.textSize(8),
+                    fontSize: SizeUtil.textSize(9.5),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -288,7 +288,7 @@ class SettingsScreen extends StatelessWidget {
               children: [
                 Container(
                   height: SizeUtil.heightPercentage(6.5),
-                  width: SizeUtil.widthPercentage(11),
+                  width: SizeUtil.widthPercentage(10),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF5F5F5),
                     borderRadius: BorderRadius.circular(30),

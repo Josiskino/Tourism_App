@@ -44,81 +44,89 @@ class HomeScreenBodySection extends StatelessWidget {
             children: [
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  tIndicativeCategoryText,
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: Color(0xFF444648),
-                    fontWeight: FontWeight.bold,
-                  ),
-                  //textAlign: TextAlign.start,
+                child: Row(
+                  children: [
+                    Text(
+                      tIndicativeCategoryText,
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Color(0xFF444648),
+                        fontWeight: FontWeight.bold,
+                      ),
+                      //textAlign: TextAlign.start,
+                    ),
+                    Spacer(),
+                    Text(
+                      'All',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF444648),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.only(left: 20),
-                child: SizedBox(
-                  height: 30,
-                  child: BlocBuilder<CategoryCubit, CategoryState>(
-                    builder: (context, state) {
-                      int currentIndex = (state is CategorySelected)
-                          ? state.selectedIndex
-                          : -1;
+              SizedBox(
+                height: 30,
+                child: BlocBuilder<CategoryCubit, CategoryState>(
+                  builder: (context, state) {
+                    int currentIndex =
+                        (state is CategorySelected) ? state.selectedIndex : -1;
 
-                      return ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          bool isSelected = index == currentIndex;
+                    return ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemBuilder: (context, index) {
+                        bool isSelected = index == currentIndex;
 
-                          return GestureDetector(
-                            onTap: () {
-                              context
-                                  .read<CategoryCubit>()
-                                  .selectCategory(index);
-                            },
-                            child: Container(
-                              // constraints: const BoxConstraints(
-                              //   maxWidth: 150,
-                              // ),
-                              //alignment: Alignment.center,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 20,
-                                vertical: 3,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
+                        return GestureDetector(
+                          onTap: () {
+                            context.read<CategoryCubit>().selectCategory(index);
+                          },
+                          child: Container(
+                            // constraints: const BoxConstraints(
+                            //   maxWidth: 150,
+                            // ),
+                            //alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 3,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: isSelected
+                                  ? const Color(0xFFFF983F)
+                                  : const Color(0xFFF5F5F5),
+                              border: Border.all(
+                                //color: const Color(0xFFFF983F),
                                 color: isSelected
                                     ? const Color(0xFFFF983F)
-                                    : const Color(0xFFF5F5F5),
-                                border: Border.all(
-                                  color: const Color(
-                                      0xFFFF983F), // Bordure de tous les éléments (orange)
-                                  width: 2.0,
-                                ),
+                                    : const Color.fromARGB(255, 247, 244, 244),
+                                width: 1.0,
                               ),
-                              child: Center(
-                                child: Text(
-                                  categories[index].name,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: isSelected
-                                        ? const Color(
-                                            0xFFFFFFFF) // Blanc pour l'élément courant
-                                        : const Color(
-                                            0xFF444648), // Noir pour les autres éléments
-                                  ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                categories[index].name,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: isSelected
+                                      ? const Color(0xFFFFFFFF)
+                                      : const Color(0xFF444648),
                                 ),
                               ),
                             ),
-                          );
-                        },
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(width: 10),
-                        itemCount: Categories.categories().length,
-                      );
-                    },
-                  ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(width: 10),
+                      itemCount: Categories.categories().length,
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 20),
@@ -183,12 +191,10 @@ class HomeScreenBodySection extends StatelessWidget {
                                 top: 10,
                                 right: 10,
                                 child: GestureDetector(
-                                  onTap: () {
-                                   
-                                  },
+                                  onTap: () {},
                                   child: Icon(
-                                    Icons.favorite_border, // Icône de like vide
-                                    color: Colors.white, // Couleur de l'icône
+                                    Icons.favorite_border, 
+                                    color: Colors.white, 
                                     size: SizeUtil.textSize(6),
                                   ),
                                 ),
@@ -204,7 +210,7 @@ class HomeScreenBodySection extends StatelessWidget {
                                 Text(
                                   sites[index].name,
                                   style: TextStyle(
-                                    fontSize: SizeUtil.textSize(5.5),
+                                    fontSize: SizeUtil.textSize(4.5),
                                     color: const Color(0xFF444648),
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -287,5 +293,5 @@ class HomeScreenBodySection extends StatelessWidget {
         ],
       ),
     );
-  }
+  } 
 }
