@@ -1,5 +1,5 @@
-import '../../domain/entities/agency.dart';
-import '../../domain/entities/tourist.dart';
+//import '../../domain/entities/agency.dart';
+//import '../../domain/entities/tourist.dart';
 
 class UserType {
   final dynamic userModel;
