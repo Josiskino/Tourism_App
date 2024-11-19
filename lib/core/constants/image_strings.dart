@@ -20,7 +20,7 @@ const String tGoogleLogoImage =
     "assets/images/login_register_pages/google_logo.png";
 
 //--Home Screen Image
-const String tHomeScreenImage = "assets/images/cover/cover2.jpg";
+const String tHomeScreenImage = "assets/images/cover/cover2.jpeg";
 
 //--Profil Image
 const String tProfilImage1 = "assets/images/profil/profil1.jpg";
@@ -30,4 +30,9 @@ const String tProfilImage4 = "assets/images/profil/profil4.jpg";
 
 //--Trip Screen Images
 const String tTripScreenImage1 = "assets/images/trip/cover/tripImg1.jpeg";
+
+//--Custom SnackBar Images
+const String tCustomSnackBarImage1 = "assets/images/snack_icons/bubbles.svg";
+const String tCustomSnackBarImage2 = "assets/images/snack_icons/fail.svg";
+const String tCustomSnackBarImage3 = "assets/images/snack_icons/close.svg";
 

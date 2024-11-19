@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myapp/bottomnavbar/custom_bottom_nav_bar.dart';
 import 'package:myapp/core/util/screen_size.dart';
 import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:myapp/features/auth/presentation/pages/login/login.dart';
+import 'package:myapp/main_screen/main_screen.dart';
+import 'package:myapp/newhome/newhome.dart';
 import 'package:myapp/main_screen/bloc/cubit/activities_dropdown_cubit.dart';
 import 'package:myapp/main_screen/bloc/cubit/map_cubit.dart';
 import 'package:myapp/main_screen/bloc/cubit/tab_cubit.dart';
@@ -16,13 +19,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Configure the status bar color and icons
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      //statusBarColor: Color(0xFF111111),
-      statusBarColor: Color(0xFFFF6600),
-      statusBarIconBrightness: Brightness.light,
-    ),
-  );
+  //SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
+  // SystemChrome.setSystemUIOverlayStyle(
+  //   const SystemUiOverlayStyle(
+  //     //statusBarColor: Color(0xFF111111),
+  //     statusBarColor: Color(0xFFFF6600),
+  //     statusBarIconBrightness: Brightness.light,
+  //   ),
+  // );
 
   await di.initDependencies();
 
@@ -61,11 +66,13 @@ class MyApp extends StatelessWidget {
               child: MaterialApp(
                 debugShowCheckedModeBanner: false,
                 theme: lightThemeData(context),
-                darkTheme: darkThemeData(context),
+                //darkTheme: darkThemeData(context),
                 themeMode: ThemeMode.system,
                 //home: const Calendar(),
-                //home: MainScreen(),
-                home: const LoginScreen(),
+                home: MainScreen(),
+                //home: const LoginScreen(),
+                //home: const NewHome(),
+                //home: CustomBottomNavBar()
                 
                 //home: OnboardScreen(),
                 //home: const TripScreen(),

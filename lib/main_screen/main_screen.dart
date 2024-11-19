@@ -8,11 +8,13 @@ import 'package:myapp/main_screen/home_screen.dart';
 import 'package:myapp/main_screen/map_screen.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:myapp/main_screen/settings_screen.dart';
+import 'package:myapp/newhome/newhome.dart';
 
 
 class MainScreen extends StatelessWidget {
   final List<Widget> screens = [
-    HomeScreen(),
+    const NewHome(),
+    //HomeScreen(),
     //const ActivitiesScreen(),
      const FavoritesScreen(),
     MapScreen(),

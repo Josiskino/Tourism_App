@@ -29,18 +29,16 @@ class _FavoritesScreenState extends State<FavoritesScreen>
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Row(
-          children: [
-            Text(
-              'My Favorites',
-              style: TextStyle(
-                color: const Color(0xFF000000),
-                fontWeight: FontWeight.bold,
-                fontSize: SizeUtil.textSize(7.2),
-              ),
-            ),
-          ],
+        automaticallyImplyLeading: false,
+        title: Text(
+          'My Favorites',
+          style: TextStyle(
+            color: const Color(0xFF000000),
+            fontWeight: FontWeight.bold,
+            fontSize: SizeUtil.textSize(7.2),
+          ),
         ),
+        centerTitle: true,
         backgroundColor: const Color.fromARGB(192, 248, 246, 246),
         bottom: TabBar(
           controller: _tabController,
@@ -74,7 +72,7 @@ class _FavoritesScreenState extends State<FavoritesScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.network(
-                  'https://via.placeholder.com/150', // Remplacez par votre URL d'image ou par une image locale
+                  'https://via.placeholder.com/150',
                   width: 100,
                   height: 100,
                 ),

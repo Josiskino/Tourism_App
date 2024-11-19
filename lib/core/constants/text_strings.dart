@@ -11,7 +11,7 @@ const String tAlreadyHaveAnAccount = "Already have an account? ";
 const String tSignUp = "signup";
 
 // --Home Screen Text
-const String tSearchBarText = "Chercher autour de moi";
+const String tSearchBarText = "Chercher autour de moi ...";
 const String tLocationTitle = "Your location";
 const String tCurrentLocation = "Lomé, Agoè";
 const String tImageTitle = "Découvrez des Lieux Magiques";
