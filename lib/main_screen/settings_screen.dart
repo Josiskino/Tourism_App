@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/profil/profil_screen.dart';
+import '../core/constants/sizes.dart';
 import '../core/constants/text_strings.dart';
 import '../core/util/screen_size.dart';
 import 'bloc/cubit/settings_toggle_button_cubit.dart';
@@ -25,16 +26,16 @@ class SettingsScreen extends StatelessWidget {
                 Text(
                   tSettingTitle,
                   style: TextStyle(
-                    fontSize: SizeUtil.textSize(9.5),
+                    fontSize: SizeUtil.textSize(sTitleSpace),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: sSectionSpace),
                 Text(
                   "Général",
                   style: TextStyle(
                     color: Colors.grey,
-                    fontSize: SizeUtil.textSize(4),
+                    fontSize: SizeUtil.textSize(4.5),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -54,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
                   title: "Paramètre de l'application",
                   subtitle: "Modifier les paramètres généraux de l'application",
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: sSectionSpace),
                 Text(
                   "Langue",
                   style: TextStyle(
@@ -68,7 +69,7 @@ class SettingsScreen extends StatelessWidget {
                   title: "Langue",
                   subtitle: "Changer la langue de l'application",
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: sSectionSpace),
                 Text(
                   "Thème",
                   style: TextStyle(
@@ -97,7 +98,7 @@ class SettingsScreen extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: sSectionSpace),
                 Text(
                   "Notifications",
                   style: TextStyle(
@@ -127,7 +128,7 @@ class SettingsScreen extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: sSectionSpace),
                 Text(
                   "Sécurité",
                   style: TextStyle(
@@ -163,7 +164,8 @@ class SettingsScreen extends StatelessWidget {
                     );
                   },
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: sSectionSpace),
+                
                 const Text(
                   "Aide",
                   style: TextStyle(

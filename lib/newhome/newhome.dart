@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:myapp/core/constants/text_strings.dart';
@@ -8,6 +10,7 @@ import '../config/theme/color_schemes.dart';
 import '../core/constants/sizes.dart';
 import '../core/util/custom_snackbar.dart';
 import '../entities/sites.dart';
+import '../place_details_screen/place_details_screen.dart';
 
 class NewHome extends StatefulWidget {
   const NewHome({super.key});
@@ -25,15 +28,21 @@ class _NewHomeState extends State<NewHome> {
     'https://via.placeholder.com/600x300?text=Image+5',
   ];
 
+  final List<String> _imagesAsset = [
+    '',
+    '',
+    '',
+  ];
+
   final List<Sites> sites = Sites.sites();
 
   final List<PlaceCategory> _categories = [
-    PlaceCategory(icon: Icons.park, name: 'Parcs'),
-    PlaceCategory(icon: Icons.hotel, name: 'Hôtels'),
-    PlaceCategory(icon: Icons.museum, name: 'Musées'),
-    PlaceCategory(icon: Icons.beach_access, name: 'Plages'),
-    PlaceCategory(icon: Icons.nightlife, name: 'Clubs'),
-    PlaceCategory(icon: Icons.coffee, name: 'Cafés'),
+    PlaceCategory(icon: Icons.park_outlined, name: 'Parcs'),
+    PlaceCategory(icon: Icons.hotel_outlined, name: 'Hôtels'),
+    PlaceCategory(icon: Icons.museum_outlined, name: 'Musées'),
+    PlaceCategory(icon: Icons.beach_access_outlined, name: 'Plages'),
+    PlaceCategory(icon: Icons.nightlife_outlined, name: 'Clubs'),
+    PlaceCategory(icon: Icons.coffee_outlined, name: 'Cafés'),
     // PlaceCategory(icon: Icons.local_florist, name: 'Jardins'),
     // PlaceCategory(icon: Icons.restaurant, name: 'Restaurants'),
     // PlaceCategory(icon: Icons.shopping_bag, name: 'Boutiques'),
@@ -139,7 +148,7 @@ class _NewHomeState extends State<NewHome> {
             child: Container(
               height: SizeUtil.heightPercentage(7),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(123, 223, 217, 217),
+                color: Color.fromARGB(122, 223, 219, 217),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Center(
@@ -256,7 +265,7 @@ class _NewHomeState extends State<NewHome> {
 
   Widget _buildCategoriesList() {
     return SizedBox(
-      height: SizeUtil.heightPercentage(10.7), //Ou soit utiliser 68px
+      height: SizeUtil.heightPercentage(12.6), //Ou soit utiliser 68px
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: _categories.length,
@@ -274,11 +283,11 @@ class _NewHomeState extends State<NewHome> {
       child: Column(
         children: [
           CircleAvatar(
-            radius: 22,
+            radius: 27,
             backgroundColor: Theme.of(context).colorScheme.primaryContainer,
             child: Icon(
               category.icon,
-              size: 19,
+              size: 21,
               color: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
           ),
@@ -318,6 +327,7 @@ class _NewHomeState extends State<NewHome> {
     );
   }
 
+  // --- NEARBY PLACES LIST ---
   Widget _buildNearbyPlacesList() {
     return SizedBox(
       height: SizeUtil.heightPercentage(41.8),
@@ -347,22 +357,36 @@ class _NewHomeState extends State<NewHome> {
   }
 
   Widget _buildPlaceImage(int index) {
-    return Stack(
-      children: [
-        // Wrap the ClipRRect with GestureDetector for double tap
-        GestureDetector(
-          onDoubleTap: () => _toggleFavorite(index),
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              ClipRRect(
+  return Stack(
+    children: [
+      GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          PageRouteBuilder(
+            transitionDuration: const Duration(milliseconds: 800),
+            reverseTransitionDuration: const Duration(milliseconds: 800),
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return FadeTransition(
+                opacity: animation,
+                child: PlaceDetailsScreen(site: sites[index]),
+              );
+            },
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return Container(
+                color: Colors.transparent, // Ensure transparent background
+                child: child,
+              );
+            },
+          ),
+        ),
+        onDoubleTap: () => _toggleFavorite(index),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Hero(
+              tag: sites[index].name,
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                // child: Image.network(
-                //   _imageUrls[index],
-                //   height: 200,
-                //   width: 190,
-                //   fit: BoxFit.cover,
-                // ),
                 child: Image.asset(
                   sites[index].image,
                   height: 200,
@@ -370,34 +394,34 @@ class _NewHomeState extends State<NewHome> {
                   fit: BoxFit.cover,
                 ),
               ),
-              // Animation de cœur lors du double-clic
-              _favorites.contains(index)
-                  ? TweenAnimationBuilder<double>(
-                      tween: Tween(begin: 0.0, end: 1.0),
-                      duration: const Duration(milliseconds: 300),
-                      builder: (context, value, child) {
-                        return Transform.scale(
-                          scale: 2 * value,
-                          child: Icon(
-                            Icons.favorite,
-                            color: Colors.white.withOpacity(1 - value),
-                            size: 40,
-                          ),
-                        );
-                      },
-                    )
-                  : const SizedBox(),
-            ],
-          ),
+            ),
+            if (_favorites.contains(index))
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration: const Duration(milliseconds: 400),
+                curve: Curves.easeOutBack,
+                builder: (context, value, child) {
+                  return Transform.scale(
+                    scale: 2 * (1 + 0.2 * sin(value * pi)),
+                    child: Icon(
+                      Icons.favorite,
+                      color: Colors.white.withOpacity(1 - value),
+                      size: 40,
+                    ),
+                  );
+                },
+              ),
+          ],
         ),
-        Positioned(
-          top: 10,
-          right: 10,
-          child: _buildFavoriteButton(index),
-        ),
-      ],
-    );
-  }
+      ),
+      Positioned(
+        top: 10,
+        right: 10,
+        child: _buildFavoriteButton(index),
+      ),
+    ],
+  );
+}
 
   Widget _buildFavoriteButton(int index) {
     final bool isFavorite = _favorites.contains(index);

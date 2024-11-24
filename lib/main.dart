@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:myapp/bottomnavbar/custom_bottom_nav_bar.dart';
 import 'package:myapp/core/util/screen_size.dart';
 import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:myapp/features/auth/presentation/pages/login/login.dart';
 import 'package:myapp/main_screen/main_screen.dart';
-import 'package:myapp/newhome/newhome.dart';
 import 'package:myapp/main_screen/bloc/cubit/activities_dropdown_cubit.dart';
 import 'package:myapp/main_screen/bloc/cubit/map_cubit.dart';
 import 'package:myapp/main_screen/bloc/cubit/tab_cubit.dart';
 import 'package:myapp/init_dependancies.dart' as di;
 import 'package:myapp/config/theme/theme_new.dart';
-import 'package:flutter/services.dart';
 import 'package:myapp/main_screen/bloc/cubit/category_cubit.dart';
+
+
+
+
+
+
 
 
 void main() async {
