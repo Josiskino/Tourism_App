@@ -29,7 +29,8 @@ class SignUpSreen extends StatelessWidget {
                       children: [
                         TextFormField(
                           decoration: const InputDecoration(
-                            label: Text("fghjkjhg"),
+                            label: Text("fullname"),
+                          
                             //hintText: tEmail,
                             prefixIcon: Icon(
                               Icons.person_outline_rounded,

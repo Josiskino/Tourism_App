@@ -1,13 +1,13 @@
 part of 'map_cubit.dart';
 
-sealed class MapState extends Equatable {
+abstract class MapState extends Equatable {
   const MapState();
-
+  
   @override
   List<Object> get props => [];
 }
 
-final class MapInitial extends MapState {}
+class MapInitial extends MapState {}
 
 class MapLoading extends MapState {}
 
@@ -18,4 +18,13 @@ class MapLoaded extends MapState {
 
   @override
   List<Object> get props => [currentPosition];
+}
+
+class MapError extends MapState {
+  final String message;
+
+  const MapError(this.message);
+
+  @override
+  List<Object> get props => [message];
 }

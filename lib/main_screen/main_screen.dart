@@ -4,7 +4,7 @@ import 'package:myapp/custom_bottom_navigationBar/custom_bottom_app_bar.dart';
 //import 'package:myapp/main_screen/activities_screen.dart';
 import 'package:myapp/main_screen/bloc/cubit/tab_cubit.dart';
 import 'package:myapp/main_screen/favorites_screen.dart';
-import 'package:myapp/main_screen/home_screen.dart';
+//import 'package:myapp/main_screen/home_screen.dart';
 import 'package:myapp/main_screen/map_screen.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:myapp/main_screen/settings_screen.dart';
@@ -17,7 +17,7 @@ class MainScreen extends StatelessWidget {
     //HomeScreen(),
     //const ActivitiesScreen(),
      const FavoritesScreen(),
-    MapScreen(),
+    const MapScreen(),
     const SettingsScreen(),
   ];
 

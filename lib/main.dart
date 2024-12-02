@@ -7,7 +7,7 @@ import 'package:myapp/main_screen/bloc/cubit/activities_dropdown_cubit.dart';
 import 'package:myapp/main_screen/bloc/cubit/map_cubit.dart';
 import 'package:myapp/main_screen/bloc/cubit/tab_cubit.dart';
 import 'package:myapp/init_dependancies.dart' as di;
-import 'package:myapp/config/theme/theme_new.dart';
+import 'package:myapp/config/theme/theme_new.dart'; 
 import 'package:myapp/main_screen/bloc/cubit/category_cubit.dart';
 
 

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,52 +8,85 @@ part 'map_state.dart';
 
 class MapCubit extends Cubit<MapState> {
   final Location _locationController = Location();
-  final Completer<GoogleMapController> _mapController = Completer<GoogleMapController>();
+  StreamSubscription<LocationData>? _locationSubscription;
+  Timer? _locationTimer;
 
   MapCubit() : super(MapInitial()) {
-    _getLocationUpdates();
+    _initializeLocation();
   }
 
-  Future<void> _cameraToPosition(LatLng pos) async {
-    final GoogleMapController controller = await _mapController.future;
-    CameraPosition _newCameraPosition = CameraPosition(
-      target: pos,
-      zoom: 15,
-    );
-    await controller.animateCamera(
-      CameraUpdate.newCameraPosition(_newCameraPosition),
-    );
+  Future<void> _initializeLocation() async {
+    try {
+      // Vérifier et demander les permissions
+      bool serviceEnabled = await _locationController.serviceEnabled();
+      if (!serviceEnabled) {
+        serviceEnabled = await _locationController.requestService();
+        if (!serviceEnabled) {
+          emit(MapError('Location service not enabled'));
+          return;
+        }
+      }
+
+      PermissionStatus permissionGranted = await _locationController.hasPermission();
+      if (permissionGranted == PermissionStatus.denied) {
+        permissionGranted = await _locationController.requestPermission();
+        if (permissionGranted != PermissionStatus.granted) {
+          emit(MapError('Location permission denied'));
+          return;
+        }
+      }
+
+      // Récupérer la position initiale
+      LocationData? initialLocation = await _locationController.getLocation();
+      if (initialLocation.latitude != null && initialLocation.longitude != null) {
+        LatLng initialPosition = LatLng(initialLocation.latitude!, initialLocation.longitude!);
+        emit(MapLoaded(currentPosition: initialPosition));
+      }
+
+      // Configurer l'écoute des changements de position
+      _startLocationUpdates();
+    } catch (e) {
+      emit(MapError('Error initializing location: ${e.toString()}'));
+    }
   }
 
-  Future<void> _getLocationUpdates() async {
-    emit(MapLoading());
+  void _startLocationUpdates() {
+    // Annuler toute subscription existante
+    _locationSubscription?.cancel();
+    _locationTimer?.cancel();
 
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    // Configurer les paramètres de localisation
+    _locationController.changeSettings(
+      interval: 5000, // 5 secondes
+      distanceFilter: 10, // 10 mètres
+    );
 
-    _serviceEnabled = await _locationController.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await _locationController.requestService();
-      if (!_serviceEnabled) {
-        emit(MapInitial()); // Retour à l'état initial si le service n'est pas activé
-        return;
-      }
-    }
-    _permissionGranted = await _locationController.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await _locationController.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        emit(MapInitial()); // Retour à l'état initial si la permission est refusée
-        return;
-      }
-    }
-
-    _locationController.onLocationChanged.listen((LocationData currentLocation) {
-      if (currentLocation.latitude != null && currentLocation.longitude != null) {
-        LatLng currentP = LatLng(currentLocation.latitude!, currentLocation.longitude!);
-        emit(MapLoaded(currentPosition: currentP));
-        _cameraToPosition(currentP);
+    // Utiliser un Timer périodique comme alternative au stream continu
+    _locationTimer = Timer.periodic(Duration(seconds: 5), (_) async {
+      try {
+        LocationData? currentLocation = await _locationController.getLocation();
+        if (currentLocation.latitude != null && currentLocation.longitude != null) {
+          LatLng currentPosition = LatLng(currentLocation.latitude!, currentLocation.longitude!);
+          emit(MapLoaded(currentPosition: currentPosition));
+        }
+      } catch (e) {
+        emit(MapError('Error updating location: ${e.toString()}'));
       }
     });
+  }
+
+  void stopLocationUpdates() {
+    // Annuler le timer et la subscription
+    _locationSubscription?.cancel();
+    _locationTimer?.cancel();
+
+    // Désactiver complètement les services de localisation
+    _locationController.enableBackgroundMode(enable: false);
+  }
+
+  @override
+  Future<void> close() {
+    stopLocationUpdates();
+    return super.close();
   }
 }

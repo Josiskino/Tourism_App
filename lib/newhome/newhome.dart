@@ -2,9 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:myapp/category_select_screen/category_select.dart';
 import 'package:myapp/core/constants/text_strings.dart';
 import 'package:myapp/core/util/screen_size.dart';
 import 'package:myapp/entities/trip.dart';
+import 'package:myapp/trip_detail_screen/trip_detail_screen.dart';
 
 import '../config/theme/color_schemes.dart';
 import '../core/constants/sizes.dart';
@@ -28,13 +30,15 @@ class _NewHomeState extends State<NewHome> {
     'https://via.placeholder.com/600x300?text=Image+5',
   ];
 
-  final List<String> _imagesAsset = [
-    '',
-    '',
-    '',
-  ];
+  // final List<String> _imagesAsset = [
+  //   '',
+  //   '',
+  //   '',
+  // ];
 
   final List<Sites> sites = Sites.sites();
+
+  PlaceCategory? _selectedCategory;
 
   final List<PlaceCategory> _categories = [
     PlaceCategory(icon: Icons.park_outlined, name: 'Parcs'),
@@ -148,7 +152,7 @@ class _NewHomeState extends State<NewHome> {
             child: Container(
               height: SizeUtil.heightPercentage(7),
               decoration: BoxDecoration(
-                color: Color.fromARGB(122, 223, 219, 217),
+                color: const Color.fromARGB(122, 223, 219, 217),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Center(
@@ -231,15 +235,22 @@ class _NewHomeState extends State<NewHome> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: _imageUrls.asMap().entries.map((entry) {
+        final isSelected = _currentIndex == entry.key;
         return GestureDetector(
           onTap: () => setState(() => _currentIndex = entry.key),
           child: Container(
-            width: 7.0,
-            height: 7.0,
+            width: isSelected
+                ? 16.0
+                : 7.0, // Largeur augmentée pour l'indicateur actif
+            height: isSelected
+                ? 4.0
+                : 7.0, // Hauteur réduite pour l'indicateur actif
             margin: const EdgeInsets.symmetric(horizontal: 4.0),
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: _currentIndex == entry.key
+              borderRadius: isSelected
+                  ? BorderRadius.circular(2.0)
+                  : BorderRadius.circular(50.0),
+              color: isSelected
                   ? Theme.of(context).colorScheme.primary
                   : Colors.grey,
             ),
@@ -265,11 +276,10 @@ class _NewHomeState extends State<NewHome> {
 
   Widget _buildCategoriesList() {
     return SizedBox(
-      height: SizeUtil.heightPercentage(12.6), //Ou soit utiliser 68px
+      height: SizeUtil.heightPercentage(12.6),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: _categories.length,
-        //padding: const EdgeInsets.symmetric(horizontal: 10),
         itemBuilder: (context, index) {
           return _buildCategoryItem(_categories[index], context);
         },
@@ -278,25 +288,59 @@ class _NewHomeState extends State<NewHome> {
   }
 
   Widget _buildCategoryItem(PlaceCategory category, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 27,
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            child: Icon(
-              category.icon,
-              size: 21,
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
+    // Déterminer si cette catégorie est sélectionnée
+    bool isSelected = _selectedCategory == category;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          // Si la catégorie cliquée est déjà sélectionnée, la désélectionner
+          _selectedCategory = _selectedCategory == category ? null : category;
+        });
+
+        Future.delayed(const Duration(milliseconds: 100), () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CategorySelectScreen(
+                selectedCategory: category,
+                allSites: Sites.sites(),
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            category.name,
-            style: const TextStyle(fontSize: 11),
-          ),
-        ],
+          );
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 27,
+              backgroundColor: isSelected
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : Colors.grey
+                      .shade200, // Couleur différente quand non sélectionné
+              child: Icon(
+                category.icon,
+                size: 21,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.onPrimaryContainer
+                    : Colors
+                        .grey, // Couleur d'icône différente quand non sélectionné
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              category.name,
+              style: TextStyle(
+                fontSize: 11,
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Colors.grey, // Couleur de texte différente
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -357,71 +401,72 @@ class _NewHomeState extends State<NewHome> {
   }
 
   Widget _buildPlaceImage(int index) {
-  return Stack(
-    children: [
-      GestureDetector(
-        onTap: () => Navigator.push(
-          context,
-          PageRouteBuilder(
-            transitionDuration: const Duration(milliseconds: 800),
-            reverseTransitionDuration: const Duration(milliseconds: 800),
-            pageBuilder: (context, animation, secondaryAnimation) {
-              return FadeTransition(
-                opacity: animation,
-                child: PlaceDetailsScreen(site: sites[index]),
-              );
-            },
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return Container(
-                color: Colors.transparent, // Ensure transparent background
-                child: child,
-              );
-            },
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () => Navigator.push(
+            context,
+            PageRouteBuilder(
+              transitionDuration: const Duration(milliseconds: 800),
+              reverseTransitionDuration: const Duration(milliseconds: 800),
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: PlaceDetailsScreen(site: sites[index]),
+                );
+              },
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return Container(
+                  color: Colors.transparent, // Ensure transparent background
+                  child: child,
+                );
+              },
+            ),
           ),
-        ),
-        onDoubleTap: () => _toggleFavorite(index),
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Hero(
-              tag: sites[index].name,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  sites[index].image,
-                  height: 200,
-                  width: 190,
-                  fit: BoxFit.cover,
+          onDoubleTap: () => _toggleFavorite(index),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Hero(
+                tag: sites[index].name,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.asset(
+                    sites[index].image,
+                    height: 200,
+                    width: 190,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            if (_favorites.contains(index))
-              TweenAnimationBuilder<double>(
-                tween: Tween(begin: 0.0, end: 1.0),
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeOutBack,
-                builder: (context, value, child) {
-                  return Transform.scale(
-                    scale: 2 * (1 + 0.2 * sin(value * pi)),
-                    child: Icon(
-                      Icons.favorite,
-                      color: Colors.white.withOpacity(1 - value),
-                      size: 40,
-                    ),
-                  );
-                },
-              ),
-          ],
+              if (_favorites.contains(index))
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeOutBack,
+                  builder: (context, value, child) {
+                    return Transform.scale(
+                      scale: 2 * (1 + 0.2 * sin(value * pi)),
+                      child: Icon(
+                        Icons.favorite,
+                        color: Colors.white.withOpacity(1 - value),
+                        size: 40,
+                      ),
+                    );
+                  },
+                ),
+            ],
+          ),
         ),
-      ),
-      Positioned(
-        top: 10,
-        right: 10,
-        child: _buildFavoriteButton(index),
-      ),
-    ],
-  );
-}
+        Positioned(
+          top: 10,
+          right: 10,
+          child: _buildFavoriteButton(index),
+        ),
+      ],
+    );
+  }
 
   Widget _buildFavoriteButton(int index) {
     final bool isFavorite = _favorites.contains(index);
@@ -550,143 +595,153 @@ Widget _buildTripsList() {
 }
 
 Widget _buildTripCard(TripInfo trip, BuildContext context) {
-  return Container(
-    height: 120,
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(15),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.withOpacity(0.1),
-          spreadRadius: 1,
-          blurRadius: 5,
-          offset: const Offset(0, 3),
+  return GestureDetector(
+    onTap: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+           builder: (context) => TripDetailScreen(trip: trip),
         ),
-      ],
-    ),
-    child: Row(
-      children: [
-        // Image du trip
-        ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(15),
-            bottomLeft: Radius.circular(15),
+      );
+    },
+    child: Container(
+      height: 120,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
           ),
-          child: Image.network(
-            trip.imageUrl,
-            width: 120,
-            height: 120,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Container(
-                width: 120,
-                height: 120,
-                color: Colors.grey[300],
-                child: const Icon(Icons.error),
-              );
-            },
+        ],
+      ),
+      child: Row(
+        children: [
+          // Image du trip
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(15),
+              bottomLeft: Radius.circular(15),
+            ),
+            child: Image.network(
+              trip.imageUrl,
+              width: 120,
+              height: 120,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  width: 120,
+                  height: 120,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.error),
+                );
+              },
+            ),
           ),
-        ),
-
-        // Informations du trip
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Nom du trip
-                Text(
-                  trip.name,
-                  style: TextStyle(
-                    fontSize: SizeUtil.textSize(3.5),
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onBackground,
-                  ),
-                ),
-                const SizedBox(height: 3),
-                // Location
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on_outlined,
-                      size: SizeUtil.iconSize(3.8),
-                      color: AppColors.subTextColorLight,
+    
+          // Informations du trip
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Nom du trip
+                  Text(
+                    trip.name,
+                    style: TextStyle(
+                      fontSize: SizeUtil.textSize(3.5),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onBackground,
                     ),
-                    const SizedBox(width: 5),
-                    Text(
-                      trip.startLocation,
-                      style: TextStyle(
-                        fontSize: SizeUtil.textSize(3.3),
+                  ),
+                  const SizedBox(height: 3),
+                  // Location
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: SizeUtil.iconSize(3.8),
                         color: AppColors.subTextColorLight,
                       ),
-                    ),
-                  ],
-                ),
-                //const SizedBox(height: 10),
-                Spacer(),
-                // Rating et Prix
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Rating
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.star,
-                          size: SizeUtil.iconSize(3.5),
-                          color: Theme.of(context).colorScheme.secondary,
+                      const SizedBox(width: 5),
+                      Text(
+                        trip.startLocation,
+                        style: TextStyle(
+                          fontSize: SizeUtil.textSize(3.3),
+                          color: AppColors.subTextColorLight,
                         ),
-                        const SizedBox(width: 5),
-                        Text(
-                          trip.rating.toString(),
-                          style: TextStyle(
-                            fontSize: SizeUtil.textSize(3.2),
-                            color: Theme.of(context).colorScheme.onBackground,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // Prix
-                    RichText(
-                      text: TextSpan(
+                      ),
+                    ],
+                  ),
+                  //const SizedBox(height: 10),
+                  const Spacer(),
+                  // Rating et Prix
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Rating
+                      Row(
                         children: [
-                          TextSpan(
-                            text: '\$',
-                            style: TextStyle(
-                              fontSize: SizeUtil.textSize(3.2),
-                              color: AppColors.textColorLight,
-                              fontWeight: FontWeight.bold,
-                            ),
+                          Icon(
+                            Icons.star,
+                            size: SizeUtil.iconSize(3.5),
+                            color: Theme.of(context).colorScheme.secondary,
                           ),
-                          TextSpan(
-                            text: '${trip.pricePerPerson.toInt()}',
+                          const SizedBox(width: 5),
+                          Text(
+                            trip.rating.toString(),
                             style: TextStyle(
                               fontSize: SizeUtil.textSize(3.2),
-                              color: AppColors.textColorLight,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          TextSpan(
-                            text: '/person',
-                            style: TextStyle(
-                              fontSize: SizeUtil.textSize(3.2),
-                              color: AppColors.subTextColorLight,
-                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.onBackground,
                             ),
                           ),
                         ],
                       ),
-                    )
-                  ],
-                ),
-              ],
+    
+                      // Prix
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '\$',
+                              style: TextStyle(
+                                fontSize: SizeUtil.textSize(3.2),
+                                color: AppColors.textColorLight,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '${trip.pricePerPerson.toInt()}',
+                              style: TextStyle(
+                                fontSize: SizeUtil.textSize(3.2),
+                                color: AppColors.textColorLight,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: '/person',
+                              style: TextStyle(
+                                fontSize: SizeUtil.textSize(3.2),
+                                color: AppColors.subTextColorLight,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

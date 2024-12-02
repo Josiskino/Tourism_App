@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/booking_screen/booking_screen.dart';
-import 'package:myapp/config/theme/color_schemes.dart';
+//import 'package:myapp/config/theme/color_schemes.dart';
 import 'package:myapp/core/util/screen_size.dart';
 import 'package:myapp/entities/sites.dart';
 import 'package:readmore/readmore.dart';
@@ -19,7 +19,6 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
   late String currentMainImage;
   late List<String> displayedImages;
   late TabController _tabController;
-  int _currentIndex = 0;
 
   @override
   void initState() {
@@ -37,11 +36,7 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
       'assets/images/site1_9.jpg',
     ];
     _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() {
-      setState(() {
-        _currentIndex = _tabController.index;
-      });
-    });
+    
   }
 
   void swapImages(String newMainImage) {
@@ -59,35 +54,6 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
   void dispose() {
     _tabController.dispose();
     super.dispose();
-  }
-
-  Widget _buildTabContent() {
-    switch (_currentIndex) {
-      case 0:
-        return Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Text(
-            widget.site.description,
-            style: TextStyle(
-              fontSize: 16,
-              height: 1.5,
-              color: Colors.grey[800],
-            ),
-          ),
-        );
-      case 1:
-        return const Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Center(child: Text("Reviews section")),
-        );
-      case 2:
-        return const Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Center(child: Text("Maps section")),
-        );
-      default:
-        return const SizedBox.shrink();
-    }
   }
 
   Widget _buildSecondaryImagesColumn() {

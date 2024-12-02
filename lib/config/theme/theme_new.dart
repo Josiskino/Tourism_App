@@ -1,29 +1,28 @@
 // lib/theme.dart
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+//import 'package:google_fonts/google_fonts.dart';
 import 'color_schemes.dart';
+import 'widget_themes/app_bar_theme.dart';
+import 'widget_themes/icon_theme.dart';
+import 'widget_themes/text_field_theme.dart';
 
 ThemeData lightThemeData(BuildContext context) {
   return ThemeData.light().copyWith(
     primaryColor: AppColors.primaryColorLight,
     primaryColorLight: AppColors.secondaryColorLight,
     scaffoldBackgroundColor: AppColors.backgroundColorLight,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.backgroundColorLight,
-      iconTheme: IconThemeData(
-        color: AppColors.primaryColorLight,
-      ),
-      titleTextStyle: TextStyle(
-        color: AppColors.primaryColorLight,
-      ),
-
-    ),
-    iconTheme: const IconThemeData(color: AppColors.primaryColorLight),
+    appBarTheme: TAppBarTheme.lightThemeAppBarTheme,
+    iconTheme: TIconTheme.lightThemeIconTheme,
     // textTheme: GoogleFonts.interTextTheme(Theme.of(context).textTheme).apply(
     //   displayColor: AppColors.textColorLight,
     //   bodyColor: AppColors.subTextColorLight,
     // ),
-    
+
+    //textTheme: TTextTheme.lightThemeTextTheme(context),
+    //elevatedButtonTheme: TElevatedButtonTheme.lightThemeElevatedButtonTheme,
+    //outlinedButtonTheme: TOutlinedButtonTheme.lightThemeOutlinedButtonTheme,
+    inputDecorationTheme: TTextFormFieldTheme.lightThemeDecorationTheme,
+
     colorScheme: const ColorScheme.light(
       primary: AppColors.primaryColorLight,
       primaryContainer: AppColors.primaryColorLight,
