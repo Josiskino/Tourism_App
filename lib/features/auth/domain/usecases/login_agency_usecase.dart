@@ -3,7 +3,7 @@ import 'package:myapp/core/error/failure.dart';
 import 'package:myapp/core/params/params.dart';
 import 'package:myapp/features/auth/domain/repositories/agency_repository.dart';
 
-import '../../../../core/usescase.dart/usecase.dart';
+import '../../../../core/abstract/usescase/usecase.dart';
 import '../entities/agency.dart';
 
 class LoginAgencyUseCase implements Usecase<Agency, TemplateParams> {

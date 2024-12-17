@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/core/util/show_snackbar.dart';
 import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:myapp/main_screen/main_screen.dart';
+import 'package:myapp/features/home_page/presentation/pages/main_screen.dart';
 
 import 'widgets/login_footer_widget.dart';
 import 'widgets/login_form_widget.dart';
@@ -22,8 +22,7 @@ class LoginScreen extends StatelessWidget {
             if (state is AuthFailure) {
               showSnackBar(context, state.message);
             } else if (state is AuthSuccess) {
-              Navigator.push(
-                context,
+              Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => MainScreen()),
               );
             }

@@ -17,19 +17,19 @@ class AppProviders extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthBloc>(
-          create: (context) => di.sl<AuthBloc>(),
+          create: (context) => di.serviceLocator<AuthBloc>(),
         ),
         BlocProvider<TabCubit>(
-          create: (context) => di.sl<TabCubit>(),
+          create: (context) => di.serviceLocator<TabCubit>(),
         ),
         BlocProvider<MapCubit>(
-          create: (context) => di.sl<MapCubit>(),
+          create: (context) => di.serviceLocator<MapCubit>(),
         ),
         BlocProvider<ActivitiesDropdownCubit>(
-          create: (context) => di.sl<ActivitiesDropdownCubit>(),
+          create: (context) => di.serviceLocator<ActivitiesDropdownCubit>(),
         ),
         BlocProvider<CategoryCubit>(
-          create: (context) => di.sl<CategoryCubit>(),
+          create: (context) => di.serviceLocator<CategoryCubit>(),
         ),
       ],
       child: child,

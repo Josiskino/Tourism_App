@@ -2,20 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/core/util/screen_size.dart';
 import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:myapp/main_screen/main_screen.dart';
+import 'package:myapp/init_dependancies.dart';
 import 'package:myapp/main_screen/bloc/cubit/activities_dropdown_cubit.dart';
 import 'package:myapp/main_screen/bloc/cubit/map_cubit.dart';
 import 'package:myapp/main_screen/bloc/cubit/tab_cubit.dart';
 import 'package:myapp/init_dependancies.dart' as di;
-import 'package:myapp/config/theme/theme_new.dart'; 
+import 'package:myapp/config/theme/theme_new.dart';
 import 'package:myapp/main_screen/bloc/cubit/category_cubit.dart';
 
-
-
-
-
-
-
+import 'features/auth/presentation/pages/login/login.dart';
+import 'features/home_page/presentation/bloc/home_page_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -50,7 +46,13 @@ class MyApp extends StatelessWidget {
             return MultiBlocProvider(
               providers: [
                 BlocProvider<AuthBloc>(
-                  create: (context) => di.sl<AuthBloc>(),
+                  create: (context) => di.serviceLocator<AuthBloc>(),
+                ),
+                BlocProvider<HomePageBloc>(
+                  create: (context) => serviceLocator<HomePageBloc>(),
+                ),
+                BlocProvider<AuthBloc>(
+                  create: (context) => serviceLocator<AuthBloc>(),
                 ),
                 BlocProvider<TabCubit>(
                   create: (context) => TabCubit(),
@@ -61,7 +63,7 @@ class MyApp extends StatelessWidget {
                 BlocProvider<ActivitiesDropdownCubit>(
                   create: (context) => ActivitiesDropdownCubit(),
                 ),
-                 BlocProvider<CategoryCubit>( 
+                BlocProvider<CategoryCubit>(
                   create: (context) => CategoryCubit(),
                 ),
               ],
@@ -71,12 +73,13 @@ class MyApp extends StatelessWidget {
                 //darkTheme: darkThemeData(context),
                 themeMode: ThemeMode.system,
                 //home: const Calendar(),
-                home: MainScreen(),
-                //home: const LoginScreen(),
+                //home: MainScreen(),
+                //home: const SignUpSreen(),
+                home: const LoginScreen(),
                 //home: const NewHome(),
                 //home: CustomBottomNavBar()
-                
-                //home: OnboardScreen(),
+
+                //home: OnboardScreen(),0
                 //home: const TripScreen(),
                 //home: ProfilScreen(),
               ),

@@ -1,8 +1,10 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:myapp/core/error/failure.dart';
 import 'package:myapp/core/params/params.dart';
-import 'package:myapp/features/auth/data/models/user_type.dart';
+
+import '../../data/models/user_model.dart';
 
 abstract class UserRepository {
-  Future<Either<Failure, UserType>> login(TemplateParams params);
+  Future<Either<Failure, UserModel>> login(TemplateParams params);
+  Future<Either<Failure, void>> register(TemplateParams params);
 }

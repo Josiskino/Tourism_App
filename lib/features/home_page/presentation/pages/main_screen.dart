@@ -8,7 +8,7 @@ import 'package:myapp/main_screen/favorites_screen.dart';
 import 'package:myapp/main_screen/map_screen.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:myapp/main_screen/settings_screen.dart';
-import 'package:myapp/newhome/newhome.dart';
+import 'package:myapp/features/home_page/presentation/pages/newhome/newhome.dart';
 
 
 class MainScreen extends StatelessWidget {

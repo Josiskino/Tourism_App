@@ -1,12 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/booking_screen/booking_screen.dart';
+import 'package:myapp/features/reservation/presentation/pages/booking_screen/booking_screen.dart';
 //import 'package:myapp/config/theme/color_schemes.dart';
 import 'package:myapp/core/util/screen_size.dart';
-import 'package:myapp/entities/sites.dart';
 import 'package:readmore/readmore.dart';
 
+import '../../../domain/entities/tourism_site.dart';
+
 class PlaceDetailsScreen extends StatefulWidget {
-  final Sites site;
+  //final Sites site;
+  final TourismSite site;
 
   const PlaceDetailsScreen({super.key, required this.site});
 
@@ -23,20 +26,20 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
   @override
   void initState() {
     super.initState();
-    currentMainImage = widget.site.image;
-    displayedImages = [
-      widget.site.image,
-      'assets/images/site1_2.jpg',
-      'assets/images/site1_3.jpg',
-      'assets/images/site1_4.jpg',
-      'assets/images/site1_5.jpg',
-      'assets/images/site1_6.jpg',
-      'assets/images/site1_7.jpg',
-      'assets/images/site1_8.jpg',
-      'assets/images/site1_9.jpg',
-    ];
+    currentMainImage = widget.site.photos.first.url;
+    displayedImages = widget.site.photos.map((photo) => photo.url).toList();
+    // displayedImages = [
+    //   //widget.site.image,
+    //   'assets/images/site1_2.jpg',
+    //   'assets/images/site1_3.jpg',
+    //   'assets/images/site1_4.jpg',
+    //   'assets/images/site1_5.jpg',
+    //   'assets/images/site1_6.jpg',
+    //   'assets/images/site1_7.jpg',
+    //   'assets/images/site1_8.jpg',
+    //   'assets/images/site1_9.jpg',
+    // ];
     _tabController = TabController(length: 3, vsync: this);
-    
   }
 
   void swapImages(String newMainImage) {
@@ -62,8 +65,8 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
 
     return Positioned(
       right: 16,
-      // Ajustement de la position pour éviter la collision avec l'image principale
-      top: screenHeight * 0.02, // Réduit de 0.22 à 0.08 pour remonter le bloc
+      top: screenHeight *
+          0.02, // Ajustement pour éviter la collision avec l'image principale
       child: Container(
         padding: EdgeInsets.only(
           top: screenHeight * 0.02,
@@ -72,8 +75,8 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // Container "+8" en premier
-            if (displayedImages.length > visibleImages + 1)
+            // Afficher le conteneur "+N" si plus de 3 images
+            if (displayedImages.length > visibleImages)
               Padding(
                 padding: const EdgeInsets.only(bottom: 15),
                 child: GestureDetector(
@@ -110,7 +113,7 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
                         Positioned(
                           bottom: 8,
                           child: Text(
-                            '+${displayedImages.length - (visibleImages + 1)}',
+                            '+${displayedImages.length - visibleImages}',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -124,18 +127,17 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
                 ),
               ),
 
-            // Images secondaires avec espacement ajusté
+            // Afficher les miniatures (limitées à 3 images visibles)
             ...List.generate(
-              visibleImages,
+              displayedImages.length > visibleImages
+                  ? visibleImages
+                  : displayedImages.length,
               (index) => Padding(
-                padding: const EdgeInsets.only(
-                    bottom: 15), // Augmenté légèrement l'espacement
+                padding: const EdgeInsets.only(bottom: 15),
                 child: GestureDetector(
                   onTap: () {
-                    if (index < displayedImages.length) {
-                      String imageToShow = displayedImages[index + 1];
-                      swapImages(imageToShow);
-                    }
+                    String imageToShow = displayedImages[index];
+                    swapImages(imageToShow);
                   },
                   child: Container(
                     height: 60,
@@ -155,14 +157,14 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
                       children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            displayedImages[index + 1],
+                          child: Image.network(
+                            displayedImages[index],
                             fit: BoxFit.cover,
                             width: 60,
                             height: 60,
                           ),
                         ),
-                        if (displayedImages[index + 1] == currentMainImage)
+                        if (displayedImages[index] == currentMainImage)
                           Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
@@ -224,7 +226,7 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
-                    child: Image.asset(
+                    child: Image.network(
                       displayedImages[index],
                       fit: BoxFit.cover,
                     ),
@@ -262,7 +264,7 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
                 children: [
                   const SizedBox(height: 10),
                   Text(
-                    "XOF ${widget.site.price.isNotEmpty ? widget.site.price : "FREE"}",
+                    "XOF ${widget.site.enterPrice > 0 ? widget.site.enterPrice : "FREE"}",
                     style: TextStyle(
                       color: const Color(0xFF1D1F21),
                       fontWeight: FontWeight.bold,
@@ -379,7 +381,7 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
                       fit: StackFit.expand,
                       children: [
                         Hero(
-                          tag: widget.site.name,
+                          tag: widget.site.id,
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 300),
                             transitionBuilder:
@@ -393,15 +395,44 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
                               key: ValueKey<String>(currentMainImage),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: AssetImage(currentMainImage),
-                                  fit: BoxFit.cover,
-                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: currentMainImage.isNotEmpty
+                                    ? CachedNetworkImage(
+                                        imageUrl: currentMainImage,
+                                        fit: BoxFit.cover,
+                                        width: double
+                                            .infinity, // Remplit toute la largeur
+                                        height: double
+                                            .infinity, // Remplit toute la hauteur
+                                        placeholder: (context, url) =>
+                                            Container(
+                                          color: Colors.grey[300],
+                                          child: const Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) =>
+                                            const Icon(
+                                          Icons.error,
+                                          color: Colors.red,
+                                        ),
+                                      )
+                                    : Container(
+                                        color: Colors.grey[300],
+                                        child: const Center(
+                                          child: Text(
+                                            'Image indisponible',
+                                            style: TextStyle(
+                                                color: Colors.black54),
+                                          ),
+                                        ),
+                                      ),
                               ),
                             ),
                           ),
-                        ),
-                        // Gradient overlay avec les mêmes bordures arrondies
+                        ), // Gradient overlay avec les mêmes bordures arrondies
                         Positioned(
                           bottom: 0,
                           left: 0,
@@ -460,7 +491,8 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
                               ),
                               const SizedBox(width: 5),
                               Text(
-                                widget.site.rating,
+                                //"4.2",
+                                widget.site.rating.toString(),
                                 style: TextStyle(
                                   fontSize: SizeUtil.textSize(3.8),
                                   color: Theme.of(context)
@@ -481,7 +513,8 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
                               ),
                               const SizedBox(width: 5),
                               Text(
-                                widget.site.localisation,
+                                //"Bafilo",
+                                widget.site.city,
                                 style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: SizeUtil.textSize(3.8),
@@ -507,7 +540,8 @@ class PlaceDetailsScreenState extends State<PlaceDetailsScreen>
                               ),
                               const SizedBox(width: 5),
                               Text(
-                                "${widget.site.openingTime} - ${widget.site.closingTime}",
+                                "",
+                                //"${widget.site.openingTime} - ${widget.site.closingTime}",
                                 style: TextStyle(
                                   color: Colors.grey[600],
                                   fontSize: SizeUtil.textSize(3.5),

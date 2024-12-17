@@ -1,8 +1,8 @@
-class ApiException implements Exception {
+class ApiResponseException implements Exception {
   final dynamic message;
   final int? statusCode;
 
-  ApiException({required this.message, this.statusCode});
+  ApiResponseException({required this.message, this.statusCode});
 
   @override
   String toString() {

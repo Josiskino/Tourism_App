@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:myapp/entities/place_category.dart';
 import 'package:myapp/entities/sites.dart';
-import 'package:myapp/newhome/newhome.dart';
+import 'package:myapp/features/home_page/presentation/pages/newhome/newhome.dart';
 
 class CategorySelectScreen extends StatelessWidget {
   final PlaceCategory selectedCategory;

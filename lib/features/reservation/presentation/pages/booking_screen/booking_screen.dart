@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/core/util/screen_size.dart';
-import 'package:myapp/entities/sites.dart';
 import 'package:myapp/payment_screen/payment_screen.dart';
 
+import '../booking_list_screen/reservation_list_screen.dart';
+import '../../../../home_page/domain/entities/tourism_site.dart';
+
 class BookingScreen extends StatefulWidget {
-  final Sites site;
+  //final Sites site;
+  final TourismSite site;
 
   const BookingScreen({super.key, required this.site});
 
@@ -27,7 +30,7 @@ class _BookingScreenState extends State<BookingScreen> {
   ];
 
   double get totalPrice =>
-      numberOfPersons * double.parse(widget.site.price.replaceAll(',', ''));
+      numberOfPersons * double.parse(widget.site.enterPrice.toString().replaceAll(',', ''));
 
   @override
   Widget build(BuildContext context) {
@@ -119,14 +122,56 @@ class _BookingScreenState extends State<BookingScreen> {
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              widget.site.image,
+  borderRadius: BorderRadius.circular(10),
+  child: widget.site.photos.first.url.isNotEmpty // Vérifie si l'URL n'est pas vide
+      ? Image.network(
+          widget.site.photos.first.url,
+          width: 80,
+          height: 80,
+          fit: BoxFit.cover, // Remplit tout l'espace
+          loadingBuilder: (context, child, loadingProgress) {
+            // Indicateur de chargement
+            if (loadingProgress == null) return child; // Image chargée
+            return Container(
               width: 80,
               height: 80,
-              fit: BoxFit.cover,
-            ),
+              color: Colors.grey.shade200, // Fond pendant le chargement
+              child: Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          (loadingProgress.expectedTotalBytes!)
+                      : null, // Affiche la progression si possible
+                ),
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            // Gestion des erreurs de chargement
+            return Container(
+              width: 80,
+              height: 80,
+              color: Colors.grey.shade200, // Fond par défaut si erreur
+              child: Icon(
+                Icons.broken_image,
+                color: Colors.grey,
+                size: 40,
+              ),
+            );
+          },
+        )
+      : Container(
+          width: 80,
+          height: 80,
+          color: Colors.grey.shade200, // Fond si aucune URL n'est fournie
+          child: Icon(
+            Icons.image_not_supported,
+            color: Colors.grey,
+            size: 40,
           ),
+        ),
+),
+
           const SizedBox(width: 15),
           Expanded(
             child: Column(
@@ -141,7 +186,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  widget.site.localisation,
+                  widget.site.city,
                   style: TextStyle(
                     fontSize: SizeUtil.textSize(3.5),
                     color: Colors.grey[600],
@@ -149,7 +194,7 @@ class _BookingScreenState extends State<BookingScreen> {
                 ),
                 const SizedBox(height: 5),
                 Text(
-                  'XOF ${widget.site.price} per person',
+                  'XOF ${widget.site.enterPrice} per person',
                   style: TextStyle(
                     fontSize: SizeUtil.textSize(3.3),
                     color: const Color(0xFFFF983F),
@@ -319,7 +364,7 @@ class _BookingScreenState extends State<BookingScreen> {
       child: Column(
         children: [
           _buildSummaryRow('Number of Persons', '$numberOfPersons'),
-          _buildSummaryRow('Price per Person', 'XOF ${widget.site.price}'),
+          _buildSummaryRow('Price per Person', 'XOF ${widget.site.enterPrice}'),
           _buildSummaryRow(
             'Date',
             selectedDate == null
@@ -382,7 +427,26 @@ class _BookingScreenState extends State<BookingScreen> {
       child: SafeArea(
         child: ElevatedButton(
           onPressed: selectedDate != null && selectedTime != null
-              ? () => _showPaymentMethods()
+              ? () {
+                // Au lieu de directement ouvrir le paiement, 
+                // on navigue vers l'écran des réservations
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (context) => ReservationListScreen(
+                      newReservation: Reservation(
+                        site: widget.site,
+                        numberOfPersons: numberOfPersons,
+                        date: selectedDate!,
+                        time: selectedTime!,
+                        totalPrice: totalPrice,
+                      ),
+                    ),
+                  ),
+                );
+              }
+          
+              // () => _showPaymentMethods()
               : null,
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFFFF983F),
@@ -392,7 +456,7 @@ class _BookingScreenState extends State<BookingScreen> {
             padding: const EdgeInsets.symmetric(vertical: 15),
           ),
           child: Text(
-            'Proceed to Payment',
+            'Add Booking',
             style: TextStyle(
               fontSize: SizeUtil.textSize(4),
               fontWeight: FontWeight.bold,

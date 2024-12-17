@@ -1,56 +1,61 @@
-import 'package:myapp/core/util/api_response.dart';
-import 'package:myapp/features/auth/data/models/tourist_model.dart';
-import 'package:myapp/features/auth/data/models/agency_model.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../../core/services/api_client.dart';
-import '../../models/user_type.dart';
+import '../../../../../core/util/api_response_exception.dart';
+import '../../models/user_model.dart';
 
 class AuthRemoteDataSource {
   final ApiClient apiClient;
 
   AuthRemoteDataSource({required this.apiClient});
 
-    Future<ApiResponse<UserType>> login(Map<String, dynamic> body) async {
-    final response = await apiClient.postRequest(
-      path: "login",
-      data: body,
-    );
-
-    final Map<String, dynamic> responseData = response.data as Map<String, dynamic>;
-
-    if (responseData['tourist']['role'] == 'tourist') {
-      return ApiResponse.success(
-        UserType(
-          userModel: TouristModel.fromJson(responseData['tourist']),
-          userType: 'tourist',
-        ),
+  Future<UserModel?> login(Map<String, dynamic> body) async {
+    try {
+      final response = await apiClient.postRequest(
+        path: "login",
+        data: body,
       );
-    } else if (responseData['tourist']['role'] == 'agency') {
-      return ApiResponse.success(
-        UserType(
-          userModel: AgencyModel.fromJson(responseData['agency']),
-          userType: 'agency',
-        ),
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (response.data['user'] == null) {
+          throw ApiResponseException(message: 'No user data in response');
+        }
+
+        return UserModel.fromJson(response.data);
+        //debugPrint(response.data.toString());
+        
+      } else {
+        throw ApiResponseException(
+          message: response.data['message'] ?? 'Failed to login',
+          statusCode: response.statusCode,
+        );
+      }
+    } catch (e) {
+      throw ApiResponseException(
+        message: e is ApiResponseException
+            ? e.message
+            : 'An unexpected error occurred during login',
       );
-    } else {
-      return ApiResponse.error("Unknown user role", 400);
     }
   }
 
- Future<ApiResponse<void>> registerTourist(Map<String, dynamic> body) async {
-    final response = await apiClient.postRequest(
-      path: "register/tourist",
-      data: body,
-    );
-    return ApiResponse<void>.fromResponse(response, (_) {});
-  }
+  Future<bool> register(Map<String, dynamic> body) async {
+    try {
+      final response = await apiClient.postRequest(
+        path: "register/tourist",
+        data: body,
+      );
 
-  Future<ApiResponse<void>> registerAgency(Map<String, dynamic> body) async {
-    final response = await apiClient.postRequest(
-      path: "register/agency",
-      data: body,
-    );
-    return ApiResponse<void>.fromResponse(response, (_) {});
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return true;
+      } else {
+        throw ApiResponseException(
+          message: response.data['message'] ?? 'Failed to register',
+        );
+      }
+    } catch (e) {
+      throw ApiResponseException(
+          message: 'An error occurred during registration');
+    }
   }
-
 }

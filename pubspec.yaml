@@ -41,6 +41,8 @@ dependencies:
   persistent_bottom_nav_bar: ^6.2.1
   flutter_svg: ^2.0.14
   cached_network_image: ^3.4.1
+  flutter_slidable: ^3.1.2
+  shared_preferences: ^2.3.3
 
 dev_dependencies:
   flutter_test:
@@ -61,7 +63,10 @@ flutter:
     - assets/images/login_register_pages/
     - assets/images/places/
     - assets/images/logo/
-    - assets/images/cover/
+    - assets/images/cover/cover4.jpg
+    - assets/images/cover/cover3.jpg
+    - assets/images/cover/cover2.jpeg
+    - assets/images/cover/cover1.jpg
     - assets/images/profil/
     - assets/images/onboarding/
     - assets/images/trip/cover/

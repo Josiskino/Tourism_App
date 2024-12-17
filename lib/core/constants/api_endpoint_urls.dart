@@ -9,6 +9,5 @@ class ApiEndpointUrls {
 
   //--Register Endpoint
   static const tourisRegister = "register/tourist";
-  static const agencyRegister = "register/agency";
 
 }

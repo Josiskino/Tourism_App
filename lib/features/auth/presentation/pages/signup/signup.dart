@@ -3,6 +3,9 @@ import 'package:myapp/core/constants/image_strings.dart';
 import 'package:myapp/core/constants/text_strings.dart';
 import 'package:myapp/features/shared/common_widgets/forms/form_header_widget.dart';
 
+import '../login/login.dart';
+import 'signup_form.dart';
+
 class SignUpSreen extends StatelessWidget {
   const SignUpSreen({super.key});
 
@@ -13,7 +16,7 @@ class SignUpSreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Container(
             padding: const EdgeInsets.all(15),
-            child:  Column(
+            child: Column(
               //crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const FormHeaderWidget(
@@ -21,35 +24,43 @@ class SignUpSreen extends StatelessWidget {
                   subTitle: tSignUpSubtitle,
                   image: tRegisterScreenImage,
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child:  Form(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            label: Text("fullname"),
-                          
-                            //hintText: tEmail,
-                            prefixIcon: Icon(
-                              Icons.person_outline_rounded,
-                              color: Color.fromARGB(216, 24, 24, 161),
-                              ),
-                            border: OutlineInputBorder(),
-                            labelStyle: TextStyle(color: Color(0xFF111111)),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 2.0,
-                                color: Color(0xFF111111),
-                                ),
-                            )
-                            //hintStyle: TextStyle(color: Color(0xFF111111)),
+                const SignUpFormWidget(),
+                Column(
+                  children: [
+                    //const Text("OR"),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () {},
+                        icon: const Image(
+                          image: AssetImage(tGoogleLogoImage),
+                          width: 20,
+                        ),
+                        label: const Text("Sign in with Google"),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
                           ),
-                        )
-                      ],
-                    )
-                  ),
+                        );
+                      },
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Already Have An Account? ",
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            const TextSpan(text: "LOGIN"),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

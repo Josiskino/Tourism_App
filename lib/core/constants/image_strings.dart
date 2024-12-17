@@ -37,8 +37,12 @@ const String tCustomSnackBarImage2 = "assets/images/snack_icons/fail.svg";
 const String tCustomSnackBarImage3 = "assets/images/snack_icons/close.svg";
 
 //--Payment Methods Sheet Images
-const String tPaymentMethodsSheetImage1 =
-    "assets/images/logo/Tmoney.png";
-const String tPaymentMethodsSheetImage2 =
-    "assets/images/logo/Flooz.png";
+const String tPaymentMethodsSheetImage1 = "assets/images/logo/Tmoney.png";
+const String tPaymentMethodsSheetImage2 = "assets/images/logo/Flooz.png";
 
+//-- Cover Images
+const String tCoverImage1 = "assets/images/cover/cover4.jpg";
+const String tCoverImage2 = "assets/images/cover/cover2.jpeg";
+const String tCoverImage3 = "assets/images/cover/cover3.jpg";
+const String tCoverImage4 = "assets/images/cover/cover1.jpg";
+const String tCoverImage5 = "assets/images/cover/cover4.jpg";

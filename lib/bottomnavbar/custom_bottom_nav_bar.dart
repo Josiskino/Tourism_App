@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myapp/main_screen/main_screen.dart';
+import 'package:myapp/features/home_page/presentation/pages/main_screen.dart';
 import 'package:myapp/main_screen/settings_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 
@@ -10,16 +10,16 @@ class CustomBottomNavBar extends StatelessWidget {
   List<Widget> _buildScreens() {
         return [
           MainScreen(),
-          SettingsScreen()
+          const SettingsScreen()
         ];
     }
 
-    ScrollController _scrollController2 = ScrollController();
+    final ScrollController _scrollController2 = ScrollController();
 
     List<PersistentBottomNavBarItem> _navBarsItems() {
         return [
             PersistentBottomNavBarItem(
-                icon: Icon(CupertinoIcons.home),
+                icon: const Icon(CupertinoIcons.home),
                 title: ("Home"),
                 activeColorPrimary: CupertinoColors.activeBlue,
                 inactiveColorPrimary: CupertinoColors.systemGrey,

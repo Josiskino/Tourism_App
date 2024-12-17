@@ -1,74 +1,58 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myapp/core/abstract/local_storage/local_storage_service.dart';
 import 'package:myapp/core/params/params.dart';
-import 'package:myapp/features/auth/domain/usecases/register_tourist_usecase.dart';
-import 'package:myapp/features/auth/domain/usecases/register_agency_usecase.dart';
-import 'package:myapp/features/auth/domain/usecases/login_tourist_usecase.dart';
-import 'package:myapp/features/auth/domain/usecases/login_agency_usecase.dart';
+import 'package:myapp/core/error/failure.dart';
+
+import 'package:myapp/features/auth/domain/usecases/login_usecase.dart';
+import 'package:myapp/features/auth/domain/usecases/register_usecase.dart';
+
+import '../../data/models/user_model.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-
-  final RegisterTouristUseCase _registerTouristUseCase;
-  final RegisterAgencyUseCase _registerAgencyUseCase;
-  final LoginTouristUseCase _loginTouristUseCase;
-  //final LoginAgencyUseCase _loginAgencyUseCase;
+  final RegisterUsecase _registerUsecase;
+  final LoginUsecase _loginUsecase;
+  final LocalStorageService _localStorageService;
 
   AuthBloc({
-    required RegisterTouristUseCase registerTouristUseCase,
-    required RegisterAgencyUseCase registerAgencyUseCase,
-    required LoginTouristUseCase loginTouristUseCase,
-    required LoginAgencyUseCase loginAgencyUseCase,
-  })  : _registerTouristUseCase = registerTouristUseCase,
-        _registerAgencyUseCase = registerAgencyUseCase,
-        _loginTouristUseCase = loginTouristUseCase,
-        //_loginAgencyUseCase = loginAgencyUseCase,
+    required RegisterUsecase registerUsecase,
+    required LoginUsecase loginUsecase,
+    required LocalStorageService localStorageService,
+  })  : _registerUsecase = registerUsecase,
+        _loginUsecase = loginUsecase,
+        _localStorageService = localStorageService,
         super(AuthInitial()) {
-    on<RegisterTouristEvent>(_onRegisterTouristEvent);
-    on<RegisterAgencyEvent>(_onRegisterAgencyEvent);
+    on<RegisterEvent>(_onRegisterEvent);
     on<LoginEvent>(_onLoginEvent);
+    on<LogoutEvent>(_onLogoutEvent);
+    on<CheckAuthStatusEvent>(_onCheckAuthStatusEvent);
   }
 
-  Future<void> _onRegisterTouristEvent(
-    RegisterTouristEvent event,
+  Future<void> _onRegisterEvent(
+    RegisterEvent event,
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
-    final res = await _registerTouristUseCase(
-      TemplateParams(params: {
-        'email': event.email,
-        'password': event.password,
-        'touristName': event.touristName,
-      }),
-    );
-    res.fold(
-      (failure) => emit(AuthFailure(failure.message)),
-      (_) => emit(const AuthSuccess(
-          null),), // Vous pouvez ajuster en fonction de ce que vous voulez retourner
-    );
-  }
 
-  Future<void> _onRegisterAgencyEvent(
-    RegisterAgencyEvent event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthLoading());
-    final res = await _registerAgencyUseCase(
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    final result = await _registerUsecase(
       TemplateParams(
         params: {
           'email': event.email,
           'password': event.password,
-          'agencyName': event.agencyName,
-          'agencyResponsibleName': event.agencyResponsibleName,
+          'touristName': event.touristName,
+          'touristPhone': event.touristPhone,
         },
       ),
     );
-    res.fold(
-      (failure) => emit(AuthFailure(failure.message)),
-      (_) => emit(const AuthSuccess(
-          null)), // Vous pouvez ajuster en fonction de ce que vous voulez retourner
+
+    result.fold(
+      (failure) => emit(AuthFailure(_mapFailureToMessage(failure))),
+      (_) => emit(const AuthSuccess(null)),
     );
   }
 
@@ -77,23 +61,91 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());
-    final res = await _loginTouristUseCase(
-      TemplateParams(
-        params: {
-          'email': event.email,
-          'password': event.password,
+
+    try {
+      final result = await _loginUsecase(
+        TemplateParams(
+          params: {
+            'email': event.email,
+            'password': event.password,
+          },
+        ),
+      );
+
+      final resultState = await result.fold(
+        // En cas d'échec
+        (failure) async {
+          return AuthFailure(_mapFailureToMessage(failure));
         },
-      ),
-    );
-    res.fold(
-      (failure) => emit(AuthFailure(failure.message)),
-      (tourist) {
-        if (tourist.role == "tourist") {
-          emit(AuthSuccess(tourist));
-        } else {
-          emit(const AuthFailure("User role not recognized"));
-        }
-      },
-    );
+        // En cas de succès
+        (user) async {
+          // Récupérer le token de manière asynchrone
+          final token = await _localStorageService.getToken();
+
+          if (token != null) {
+            user.token = token;
+            return AuthSuccess(user);
+          } else {
+            return const AuthFailure("Impossible de récupérer le token");
+          }
+        },
+      );
+
+      // Émettre l'état final
+      emit(resultState);
+    } catch (error) {
+      emit(AuthFailure("Une erreur inattendue est survenue : $error"));
+    }
+  }
+
+  Future<void> _onLogoutEvent(
+    LogoutEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      // Supprimer le token
+      await _localStorageService.removeToken();
+
+      // Émettre un état de déconnexion
+      emit(AuthInitial());
+    } catch (error) {
+      emit(AuthFailure("Erreur lors de la déconnexion : $error"));
+    }
+  }
+
+  Future<void> _onCheckAuthStatusEvent(
+    CheckAuthStatusEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    try {
+      // Vérifier si un token existe
+      final token = await _localStorageService.getToken();
+
+      if (token != null) {
+        // Token existe, l'utilisateur est connecté
+        emit(const AuthSuccess(
+            null)); // Vous pouvez passer l'utilisateur si nécessaire
+      } else {
+        // Pas de token, utilisateur non connecté
+        emit(AuthInitial());
+      }
+    } catch (error) {
+      emit(AuthFailure(
+          "Erreur lors de la vérification de l'authentification : $error"));
+    }
+  }
+
+  String _mapFailureToMessage(Failure failure) {
+    if (failure is ServerFailure) {
+      switch (failure.message) {
+        case 'Invalid credentials':
+          return 'Identifiants incorrects';
+        case 'Network error':
+          return 'Problème de connexion';
+        default:
+          return failure.message;
+      }
+    }
+    return 'Une erreur est survenue';
   }
 }

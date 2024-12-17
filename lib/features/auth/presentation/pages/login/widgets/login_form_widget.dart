@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myapp/core/constants/text_strings.dart';
 import 'package:myapp/features/auth/presentation/bloc/auth_bloc.dart';
 
+import '../../../../../home_page/presentation/pages/main_screen.dart';
+
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
@@ -11,12 +13,23 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordVisible = false;
 
   void _validateFields() {
     setState(() {});
+  }
+
+  void _onLoginPressed() {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    context.read<AuthBloc>().add(LoginEvent(
+          email: email,
+          password: password,
+        ));
   }
 
   @override
@@ -35,6 +48,17 @@ class _LoginFormState extends State<LoginForm> {
             SnackBar(content: Text(state.message)),
           );
         }
+        // else if (state is AuthSuccess) {
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     const SnackBar(content: Text("Login successful!")),
+        //   );
+        //   Navigator.pushReplacement(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => MainScreen(),
+        //     ),
+        //   );
+        // }
       },
       builder: (context, state) {
         final bool isLoading = state is AuthLoading;
@@ -102,14 +126,7 @@ class _LoginFormState extends State<LoginForm> {
                             passwordController.text.isNotEmpty &&
                             !isLoading
                         ? () {
-                            final email = emailController.text;
-                            final password = passwordController.text;
-                            context.read<AuthBloc>().add(
-                                  LoginEvent(
-                                    email: email,
-                                    password: password,
-                                  ),
-                                );
+                            _onLoginPressed();
                           }
                         : null,
                     style: ElevatedButton.styleFrom(

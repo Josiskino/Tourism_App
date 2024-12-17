@@ -15,14 +15,23 @@ class ApiResponse<T> {
       : data = null,
         success = false;
 
-  factory ApiResponse.fromResponse(Response response, T Function(Map<String, dynamic>) fromJson) {
+  factory ApiResponse.fromResponse(
+    Response response,
+    T Function(Map<String, dynamic>) fromJson,
+  ) {
     final statusCode = response.statusCode;
     final data = response.data;
-    final message = _getMessageForStatusCode(statusCode ?? 500);
-    if (statusCode != null && (statusCode >= 200 && statusCode < 300)) {
+
+    if (data is Map<String, dynamic> &&
+        statusCode != null &&
+        (statusCode >= 200 && statusCode < 300)) {
       return ApiResponse.success(fromJson(data));
-    } else {
+    } else if (data is Map<String, dynamic>) {
+      final message =
+          data['status_message'] ?? _getMessageForStatusCode(statusCode ?? 500);
       return ApiResponse.error(message, statusCode);
+    } else {
+      return ApiResponse.error('Unknown error', statusCode);
     }
   }
 
