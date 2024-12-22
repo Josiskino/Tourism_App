@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:myapp/core/util/screen_size.dart';
-import 'package:myapp/payment_screen/payment_screen.dart';
+import 'package:myapp/features/transactions/presentation/pages/payment_screen/payment_screen.dart';
 
+import '../../../../../core/abstract/local_storage/local_storage_service.dart';
+import '../../../../../core/params/params.dart';
+import '../../../../../init_dependancies.dart';
+import '../../bloc/reservation_page_bloc.dart';
+import '../../bloc/reservation_page_event.dart';
+import '../../bloc/reservation_page_state.dart';
 import '../booking_list_screen/reservation_list_screen.dart';
 import '../../../../home_page/domain/entities/tourism_site.dart';
 
@@ -30,7 +37,8 @@ class _BookingScreenState extends State<BookingScreen> {
   ];
 
   double get totalPrice =>
-      numberOfPersons * double.parse(widget.site.enterPrice.toString().replaceAll(',', ''));
+      numberOfPersons *
+      double.parse(widget.site.enterPrice.toString().replaceAll(',', ''));
 
   @override
   Widget build(BuildContext context) {
@@ -122,56 +130,60 @@ class _BookingScreenState extends State<BookingScreen> {
       child: Row(
         children: [
           ClipRRect(
-  borderRadius: BorderRadius.circular(10),
-  child: widget.site.photos.first.url.isNotEmpty // Vérifie si l'URL n'est pas vide
-      ? Image.network(
-          widget.site.photos.first.url,
-          width: 80,
-          height: 80,
-          fit: BoxFit.cover, // Remplit tout l'espace
-          loadingBuilder: (context, child, loadingProgress) {
-            // Indicateur de chargement
-            if (loadingProgress == null) return child; // Image chargée
-            return Container(
-              width: 80,
-              height: 80,
-              color: Colors.grey.shade200, // Fond pendant le chargement
-              child: Center(
-                child: CircularProgressIndicator(
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          (loadingProgress.expectedTotalBytes!)
-                      : null, // Affiche la progression si possible
-                ),
-              ),
-            );
-          },
-          errorBuilder: (context, error, stackTrace) {
-            // Gestion des erreurs de chargement
-            return Container(
-              width: 80,
-              height: 80,
-              color: Colors.grey.shade200, // Fond par défaut si erreur
-              child: Icon(
-                Icons.broken_image,
-                color: Colors.grey,
-                size: 40,
-              ),
-            );
-          },
-        )
-      : Container(
-          width: 80,
-          height: 80,
-          color: Colors.grey.shade200, // Fond si aucune URL n'est fournie
-          child: Icon(
-            Icons.image_not_supported,
-            color: Colors.grey,
-            size: 40,
+            borderRadius: BorderRadius.circular(10),
+            child: widget.site.photos.first.url
+                    .isNotEmpty // Vérifie si l'URL n'est pas vide
+                ? Image.network(
+                    widget.site.photos.first.url,
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover, // Remplit tout l'espace
+                    loadingBuilder: (context, child, loadingProgress) {
+                      // Indicateur de chargement
+                      if (loadingProgress == null)
+                        return child; // Image chargée
+                      return Container(
+                        width: 80,
+                        height: 80,
+                        color:
+                            Colors.grey.shade200, // Fond pendant le chargement
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    (loadingProgress.expectedTotalBytes!)
+                                : null, // Affiche la progression si possible
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      // Gestion des erreurs de chargement
+                      return Container(
+                        width: 80,
+                        height: 80,
+                        color:
+                            Colors.grey.shade200, // Fond par défaut si erreur
+                        child: Icon(
+                          Icons.broken_image,
+                          color: Colors.grey,
+                          size: 40,
+                        ),
+                      );
+                    },
+                  )
+                : Container(
+                    width: 80,
+                    height: 80,
+                    color: Colors
+                        .grey.shade200, // Fond si aucune URL n'est fournie
+                    child: Icon(
+                      Icons.image_not_supported,
+                      color: Colors.grey,
+                      size: 40,
+                    ),
+                  ),
           ),
-        ),
-),
-
           const SizedBox(width: 15),
           Expanded(
             child: Column(
@@ -411,77 +423,111 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 
   Widget _buildPaymentButton() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      width: double.infinity,
-      // decoration: BoxDecoration(
-      //   color: Colors.white,
-      //   boxShadow: [
-      //     BoxShadow(
-      //       color: Colors.black.withOpacity(0.05),
-      //       offset: const Offset(0, -4),
-      //       blurRadius: 8,
-      //     ),
-      //   ],
-      // ),
-      child: SafeArea(
-        child: ElevatedButton(
-          onPressed: selectedDate != null && selectedTime != null
-              ? () {
-                // Au lieu de directement ouvrir le paiement, 
-                // on navigue vers l'écran des réservations
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(
-                    builder: (context) => ReservationListScreen(
-                      newReservation: Reservation(
-                        site: widget.site,
-                        numberOfPersons: numberOfPersons,
-                        date: selectedDate!,
-                        time: selectedTime!,
-                        totalPrice: totalPrice,
-                      ),
-                    ),
+    return BlocListener<ReservationBloc, ReservationState>(
+      listener: (context, state) {
+        if (state is ReservationCreated) {
+          // Redirection vers la liste des réservations avec la nouvelle réservation
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ReservationListScreen(),
+            ),
+          );
+        }
+        if (state is ReservationError) {
+          // Afficher une erreur si la réservation a échoué
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        width: double.infinity,
+        // decoration: BoxDecoration(
+        //   color: Colors.white,
+        //   boxShadow: [
+        //     BoxShadow(
+        //       color: Colors.black.withOpacity(0.05),
+        //       offset: const Offset(0, -4),
+        //       blurRadius: 8,
+        //     ),
+        //   ],
+        // ),
+        child: SafeArea(
+          child: BlocBuilder<ReservationBloc, ReservationState>(
+            builder: (context, state) {
+              return ElevatedButton(
+                onPressed: selectedDate != null &&
+                        selectedTime != null &&
+                        state is! ReservationLoading
+                    ? () {
+                        // Créer les données de réservation
+                        final reservationData = TemplateParams(params: {
+                          'endDate': null,
+                          'number_of_persons': numberOfPersons,
+                          'startDate':
+                              selectedDate!.toIso8601String().split('T').first,
+                          'reservable_type': 'tourism_site',
+                          'reservable_id': widget.site.id,
+                          'amount': totalPrice,
+                          'reservationTime': selectedTime,
+                          // 'touristId':
+                          //     serviceLocator<LocalStorageService>().getToken(),
+                          'numberOfPersons': numberOfPersons,
+                          'status': 1,
+                        });
+
+                        // Dispatch l'événement de création de réservation
+                        context.read<ReservationBloc>().add(
+                              CreateReservationEvent(
+                                reservationData: reservationData,
+                              ),
+                            );
+                      }
+
+                    // () => _showPaymentMethods()
+                    : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFF983F),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                );
-              }
-          
-              // () => _showPaymentMethods()
-              : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFFFF983F),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 15),
-          ),
-          child: Text(
-            'Add Booking',
-            style: TextStyle(
-              fontSize: SizeUtil.textSize(4),
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                ),
+                child: state is ReservationLoading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : Text(
+                        'Add Booking',
+                        style: TextStyle(
+                          fontSize: SizeUtil.textSize(4),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+              );
+            },
           ),
         ),
       ),
     );
   }
-
-  void _showPaymentMethods() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => PaymentMethodsSheet(
-        totalAmount: totalPrice,
-        onPaymentComplete: () {
-          // Handle payment completion
-          Navigator.pop(context);
-          // Show success message or navigate to confirmation screen
-        },
-      ),
-    );
-  }
 }
+
+//   void _showPaymentMethods() {
+//     showModalBottomSheet(
+//       context: context,
+//       backgroundColor: Colors.transparent,
+//       isScrollControlled: true,
+//       builder: (context) => PaymentMethodsSheet(
+//         totalAmount: totalPrice,
+//         onPaymentComplete: () {
+//           // Handle payment completion
+//           Navigator.pop(context);
+//           // Show success message or navigate to confirmation screen
+//         },
+//       ),
+//     );
+//   }
+// }
 

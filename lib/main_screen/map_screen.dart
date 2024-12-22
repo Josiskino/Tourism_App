@@ -89,7 +89,7 @@ class _MapScreenState extends State<MapScreen> {
                   maxChildSize: 0.9,
                   builder: (context, scrollController) {
                     return Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.vertical(
                           top: Radius.circular(20),
@@ -122,9 +122,9 @@ class _MapScreenState extends State<MapScreen> {
                           ),
 
                           // Titre de la section
-                          SliverToBoxAdapter(
+                          const SliverToBoxAdapter(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
+                              padding: EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 8),
                               child: Row(
                                 mainAxisAlignment:
@@ -146,7 +146,7 @@ class _MapScreenState extends State<MapScreen> {
                           // Liste horizontale de sites
                           SliverToBoxAdapter(
                             child: ConstrainedBox(
-                              constraints: BoxConstraints(maxHeight: 270),
+                              constraints: const BoxConstraints(maxHeight: 270),
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: _touristSites.length,
@@ -190,7 +190,7 @@ class _MapScreenState extends State<MapScreen> {
   Widget _buildHorizontalTouristSiteCard(TouristSite site) {
     return Container(
       width: 250,
-      margin: EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8),
       child: Card(
         elevation: 5,
         shape: RoundedRectangleBorder(
@@ -201,7 +201,7 @@ class _MapScreenState extends State<MapScreen> {
           children: [
             // Image du site
             ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
               child: Image.network(
                 site.imageUrl,
                 height: 150,
@@ -211,7 +211,7 @@ class _MapScreenState extends State<MapScreen> {
                   return Container(
                     height: 150,
                     color: Colors.grey[300],
-                    child: Icon(Icons.image_not_supported),
+                    child: const Icon(Icons.image_not_supported),
                   );
                 },
               ),
@@ -225,31 +225,31 @@ class _MapScreenState extends State<MapScreen> {
                 children: [
                   Text(
                     site.name,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
                     site.description,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Colors.grey[600]),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.location_on, size: 16, color: Colors.blue),
+                          const Icon(Icons.location_on, size: 16, color: Colors.blue),
                           Text(site.distance),
                         ],
                       ),
                       Row(
                         children: [
-                          Icon(Icons.star, size: 16, color: Colors.amber),
+                          const Icon(Icons.star, size: 16, color: Colors.amber),
                           Text('${site.rating}'),
                         ],
                       ),

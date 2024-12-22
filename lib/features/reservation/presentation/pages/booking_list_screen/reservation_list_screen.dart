@@ -1,92 +1,57 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
+import 'package:myapp/core/util/screen_size.dart';
 
-import '../../../../../core/util/screen_size.dart';
-import '../../../../home_page/domain/entities/tourism_site.dart';
-import '../../../../../payment_screen/payment_screen.dart';
+import '../../../../../init_dependancies.dart';
+import '../../../../transactions/presentation/pages/payment_screen/payment_screen.dart';
+import '../../../domain/entities/reservation.dart';
+import '../../bloc/reservation_page_bloc.dart';
+import '../../bloc/reservation_page_event.dart';
+import '../../bloc/reservation_page_state.dart';
 
-class ReservationListScreen extends StatefulWidget {
-  final Reservation? newReservation;
+class ReservationListScreen extends StatelessWidget {
+  const ReservationListScreen({super.key});
 
-  const ReservationListScreen({super.key, this.newReservation});
-
-  @override
-  _ReservationListScreenState createState() => _ReservationListScreenState();
-}
-
-class _ReservationListScreenState extends State<ReservationListScreen> {
-  List<Reservation> reservations = [];
-
-  @override
-  void initState() {
-    super.initState();
-    // Ajouter la nouvelle réservation si elle existe
-    if (widget.newReservation != null) {
-      // Par défaut, le statut est en attente (pending)
-      widget.newReservation!.status = ReservationStatus.pending;
-      reservations.add(widget.newReservation!);
-    }
+  String generateTransactionNumber() {
+    // Combinaison de la date, de l'heure et d'un nombre aléatoire
+    final now = DateTime.now();
+    final timestamp = DateFormat('yyyyMMddHHmmss').format(now);
+    final randomSuffix = Random().nextInt(9999).toString().padLeft(4, '0');
+    return 'RES-$timestamp-$randomSuffix';
   }
 
-  void _showPaymentBottomSheet(Reservation reservation) {
+    // Nouvelle méthode pour afficher le bottom sheet de paiement
+  void _showPaymentBottomSheet(BuildContext context, Reservation reservation) {
     // Ne pas afficher le bottom sheet si la réservation est déjà payée
-    if (reservation.status == ReservationStatus.paid) return;
+    if (reservation.status == 2) return; // 2 représente le statut "Payé"
 
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context) => PaymentMethodsSheet(
-        totalAmount: reservation.totalPrice,
+        totalAmount: reservation.amount,
         onPaymentComplete: () {
-          setState(() {
-            reservation.status = ReservationStatus.paid;
-          });
+          // Dispatch un événement pour mettre à jour le statut de la réservation
+          // context.read<ReservationBloc>().add(
+          //       UpdateReservationStatusEvent(
+          //         reservationId: reservation.id!,
+          //         newStatus: 2, // Statut "Payé"
+          //       ),
+          //     );
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Paiement réussi pour ${reservation.site.name}'),
+              content: Text('Paiement réussi pour la réservation'),
               backgroundColor: Colors.green,
             ),
           );
         },
       ),
-    );
-  }
-
-  void _cancelReservation(Reservation reservation) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Annuler la réservation'),
-          content: const Text('Voulez-vous vraiment annuler cette réservation ?'),
-          actions: [
-            TextButton(
-              child: const Text('Non'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            ElevatedButton(
-              child: const Text('Oui'),
-              onPressed: () {
-                setState(() {
-                  reservations.remove(reservation);
-                });
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Réservation annulée'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 
@@ -109,9 +74,50 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: reservations.isEmpty
-          ? _buildEmptyState()
-          : _buildReservationList(),
+      body: BlocProvider(
+        create: (context) =>
+            serviceLocator<ReservationBloc>()..add(FetchReservationsEvent()),
+        child: BlocBuilder<ReservationBloc, ReservationState>(
+          builder: (context, state) {
+            if (state is ReservationLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is ReservationsLoaded) {
+              return state.reservations.isEmpty
+                  ? _buildEmptyState()
+                  : _buildReservationList(state.reservations, context);
+            }
+
+            if (state is ReservationError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Erreur de chargement',
+                      style: TextStyle(fontSize: SizeUtil.textSize(4)),
+                    ),
+                    Text(
+                      state.message,
+                      style: TextStyle(
+                          fontSize: SizeUtil.textSize(3.5), color: Colors.red),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => context
+                          .read<ReservationBloc>()
+                          .add(FetchReservationsEvent()),
+                      child: const Text('Réessayer'),
+                    )
+                  ],
+                ),
+              );
+            }
+
+            return _buildEmptyState();
+          },
+        ),
+      ),
     );
   }
 
@@ -138,39 +144,42 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
     );
   }
 
-  Widget _buildReservationList() {
-    return ListView.separated(
-      padding: const EdgeInsets.all(16),
-      itemCount: reservations.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 12),
-      itemBuilder: (context, index) {
-        final reservation = reservations[index];
-        return _buildReservationItem(reservation);
+  Widget _buildReservationList(
+      List<Reservation> reservations, BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        context.read<ReservationBloc>().add(FetchReservationsEvent());
       },
+      child: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: reservations.length,
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
+        itemBuilder: (context, index) {
+          final reservation = reservations[index];
+          return _buildReservationItem(reservation, context);
+        },
+      ),
     );
   }
 
-  Widget _buildReservationItem(Reservation reservation) {
-    return Slidable(
-      // Actions de gauche à droite
-      endActionPane: ActionPane(
-        motion: const ScrollMotion(),
-        children: [
-          SlidableAction(
-            onPressed: (context) => _cancelReservation(reservation),
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: 'Annuler',
-          ),
-        ],
-      ),
-
-      // Contenu principal de la réservation
-      child: GestureDetector(
-        onTap: reservation.status != ReservationStatus.paid
-            ? () => _showPaymentBottomSheet(reservation)
-            : null,
+  Widget _buildReservationItem(Reservation reservation, BuildContext context) {
+    return GestureDetector(
+      onTap: reservation.status != 2 
+          ? () => _showPaymentBottomSheet(context, reservation)
+          : null,
+      child: Slidable(
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              onPressed: (context) => _showCancelDialog(reservation, context),
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: 'Annuler',
+            ),
+          ],
+        ),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -184,72 +193,111 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
               ),
             ],
           ),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image du site
-              ClipRRect(
-                borderRadius: const BorderRadius.horizontal(left: Radius.circular(10)),
-                child: Image.network(
-                  reservation.site.photos.first.url,
-                  width: 80,
-                  height: 80,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              
-              // Contenu de la réservation
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              reservation.site.name,
-                              style: TextStyle(
-                                fontSize: SizeUtil.textSize(3.8),
-                                fontWeight: FontWeight.bold,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Réservation #${generateTransactionNumber()}',
+                          //'Réservation #${reservation.id ?? "N/A"}',
+                          style: TextStyle(
+                            fontSize: SizeUtil.textSize(3),
+                            fontWeight: FontWeight.bold,
                           ),
-                          _buildReservationStatus(reservation.status),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${DateFormat('dd MMM yyyy').format(reservation.date)} à ${reservation.time}',
-                        style: TextStyle(
-                          fontSize: SizeUtil.textSize(3.3),
-                          color: Colors.grey[600],
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            '${reservation.numberOfPersons} personne(s)',
-                            style: TextStyle(
-                              fontSize: SizeUtil.textSize(3.3),
-                            ),
+                        _buildReservationStatus(reservation.status),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Column(
+                      children: [
+                        Text(
+                          '',
+                          //'Site: ${reservation.siteName ?? "Site non spécifié"}',
+                          style: TextStyle(
+                            fontSize: SizeUtil.textSize(3.1),
+                            color: Colors.grey[600],
+                            fontStyle: FontStyle.italic,
                           ),
-                          Text(
-                            'XOF ${NumberFormat('#,###').format(reservation.totalPrice)}',
-                            style: TextStyle(
-                              fontSize: SizeUtil.textSize(3.3),
-                              color: const Color(0xFFFF983F),
-                              fontWeight: FontWeight.bold,
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_today,
+                              size: 16,
+                              color: Colors.grey[600],
                             ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Date: ${reservation.startDate}',
+                              style: TextStyle(
+                                fontSize: SizeUtil.textSize(3.3),
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.access_time,
+                              size: 16,
+                              color: Colors.grey[600],
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Heure: ${reservation.reservationTime ?? "Non spécifiée"}',
+                              style: TextStyle(
+                                fontSize: SizeUtil.textSize(3.3),
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          //'Montant: ${reservation.amount} XOF',
+                          'Montant: ${NumberFormat('#.###').format(reservation.amount)} XOF',
+                          style: TextStyle(
+                            fontSize: SizeUtil.textSize(3.3),
+                            color: const Color(0xFFFF983F),
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     // Logique de paiement à implémenter
+                        //     _showPaymentDialog(reservation, context);
+                        //   },
+                        //   style: ElevatedButton.styleFrom(
+                        //     backgroundColor: Colors.blue,
+                        //     padding: const EdgeInsets.symmetric(
+                        //         horizontal: 12, vertical: 6),
+                        //   ),
+                        //   child: Text(
+                        //     'Payer',
+                        //     style: TextStyle(
+                        //       fontSize: SizeUtil.textSize(3),
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -259,19 +307,26 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
     );
   }
 
-  Widget _buildReservationStatus(ReservationStatus status) {
+  Widget _buildReservationStatus(int status) {
     String statusText;
     Color statusColor;
 
     switch (status) {
-      case ReservationStatus.pending:
+      case 1: // En attente
         statusText = 'En attente';
         statusColor = Colors.orange;
         break;
-      case ReservationStatus.paid:
-        statusText = 'Payé';
+      case 2: // Confirmé
+        statusText = 'Confirmé';
         statusColor = Colors.green;
         break;
+      case 3: // Annulé
+        statusText = 'Annulé';
+        statusColor = Colors.red;
+        break;
+      default:
+        statusText = 'Statut inconnu';
+        statusColor = Colors.grey;
     }
 
     return Container(
@@ -290,29 +345,33 @@ class _ReservationListScreenState extends State<ReservationListScreen> {
       ),
     );
   }
-}
 
-// Énumération pour les statuts de réservation
-enum ReservationStatus {
-  pending,
-  paid,
-}
+  void _showCancelDialog(Reservation reservation, BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Annuler la réservation'),
+          content:
+              const Text('Voulez-vous vraiment annuler cette réservation ?'),
+          actions: [
+            TextButton(
+              child: const Text('Non'),
+              onPressed: () => Navigator.of(dialogContext).pop(),
+            ),
+            ElevatedButton(
+              child: const Text('Oui'),
+              onPressed: () {
+                // Dispatch un événement pour annuler la réservation
+                context.read<ReservationBloc>().add(
+                    CancelReservationEvent(reservationId: reservation.id!));
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
-// Mise à jour du modèle de Réservation
-class Reservation {
-  final TourismSite site;
-  final int numberOfPersons;
-  final DateTime date;
-  final String time;
-  final double totalPrice;
-  ReservationStatus status;
-
-  Reservation({
-    required this.site,
-    required this.numberOfPersons,
-    required this.date,
-    required this.time,
-    required this.totalPrice,
-    this.status = ReservationStatus.pending,
-  });
 }

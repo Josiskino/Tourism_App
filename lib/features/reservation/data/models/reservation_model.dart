@@ -1,13 +1,12 @@
-
-
 import '../../domain/entities/reservation.dart';
 
 class ReservationModel extends Reservation {
-   ReservationModel({
+  ReservationModel({
     super.id,
     required super.startDate,
     super.endDate,
     required super.amount,
+    required super.numberOfPersons,
     required super.reservableType,
     required super.reservableId,
     required super.touristId,
@@ -17,30 +16,34 @@ class ReservationModel extends Reservation {
     required super.updatedAt,
   });
 
-  // Méthode fromJson à implémenter
   factory ReservationModel.fromJson(Map<String, dynamic> json) {
     return ReservationModel(
       id: json['id'],
-      startDate: json['startDate'],
-      endDate: json['endDate'],
-      amount: json['amount'],
-      reservableType: json['reservable_type'],
-      reservableId: json['reservable_id'],
-      touristId: json['tourist_id'],
-      status: json['status'],
+      startDate: json['startDate'] ?? '', 
+      endDate: json['endDate'], 
+      amount: double.parse(json['amount']?.toString() ?? '0' ) , 
+      numberOfPersons: json['number_of_persons'] ?? 0,
+      reservableType: json['reservable_type'] ?? '', 
+      reservableId: json['reservable_id'] ?? 0,
+      touristId: json['tourist_id'] ?? 0,
+      status: json['status'] ?? 0,
       reservationTime: json['reservationTime'],
-      createdAt: DateTime.parse(json['created_at']),
-      updatedAt: DateTime.parse(json['updated_at']),
+      createdAt: json['created_at'] != null 
+          ? DateTime.parse(json['created_at']) 
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null 
+          ? DateTime.parse(json['updated_at']) 
+          : DateTime.now(),
     );
   }
 
-  // Méthode toJson à implémenter
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'startDate': startDate,
       'endDate': endDate,
       'amount': amount,
+      'number_of_persons': numberOfPersons,
       'reservable_type': reservableType,
       'reservable_id': reservableId,
       'tourist_id': touristId,

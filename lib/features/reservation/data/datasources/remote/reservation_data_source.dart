@@ -10,6 +10,8 @@ class ReservationDataSource {
   // Créer une réservation
   Future<ReservationModel> createReservation(Map<String, dynamic> data) async {
     try {
+      //print("JE suis dans le data source");
+      //print(data);
       final response = await apiClient.postRequest(
         path: "reservations",
         data: data,

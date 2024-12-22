@@ -2,7 +2,8 @@ class Reservation {
   final int? id;
   final String startDate;
   final String? endDate;
-  final num amount;
+  final double amount;
+  final int numberOfPersons; 
   final String reservableType;
   final int reservableId;
   final int touristId;
@@ -16,6 +17,7 @@ class Reservation {
     required this.startDate,
     this.endDate,
     required this.amount,
+    required this.numberOfPersons, 
     required this.reservableType,
     required this.reservableId,
     required this.touristId,

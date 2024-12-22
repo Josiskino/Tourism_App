@@ -52,7 +52,7 @@ class PaymentMethodsSheet extends StatelessWidget {
                     context,
                     'Mobile Money',
                     Icons.phone_android,
-                    ['T-Money', 'Flooz'],
+                    ['Mixx By YAS', 'Flooz'],
                   ),
                   _buildPaymentOption(
                     context,
@@ -228,14 +228,14 @@ class PaymentMethodsSheet extends StatelessWidget {
                   children: [
                     _buildMobileMoneyOption(
                       context,
-                      'T-Money',
-                      tPaymentMethodsSheetImage1,
+                      'Mixx By YAS',
+                      tPaymentMethodsSheetImage2,
                       '9X XX XX XX',
                     ),
                     _buildMobileMoneyOption(
                       context,
                       'Flooz',
-                      tPaymentMethodsSheetImage2,
+                      tPaymentMethodsSheetImage1,
                       '7X XX XX XX',
                     ),
                   ],

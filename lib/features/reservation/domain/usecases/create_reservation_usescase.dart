@@ -12,6 +12,9 @@ class CreateReservationUsescase implements Usecase {
   CreateReservationUsescase({required this.repository});
   @override
   Future<Either<Failure, Reservation>> call(params) async {
+    print("Je suis dans le usecase");
+    print(params);
     return await repository.createReservation(params);
-  } 
+    
+  }
 }

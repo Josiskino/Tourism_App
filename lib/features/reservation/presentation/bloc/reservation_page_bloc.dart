@@ -26,7 +26,7 @@ class ReservationBloc extends Bloc<ReservationEvent, ReservationState> {
     Emitter<ReservationState> emit
   ) async {
     emit(ReservationLoading());
-    
+    print("Je suis dans le bloc");
     final result = await createReservationUsecase(event.reservationData);
     
     result.fold(

@@ -1,4 +1,0 @@
-class TTextTheme {
-  TTextTheme._();
-  
-}

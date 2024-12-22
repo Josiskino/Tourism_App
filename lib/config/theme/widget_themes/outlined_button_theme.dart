@@ -1,4 +1,0 @@
-class TOutlinedButtonTheme {
-  TOutlinedButtonTheme._();
-  
-}

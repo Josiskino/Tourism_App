@@ -20,11 +20,16 @@ import 'features/home_page/data/repositories/home_page_data_repository_impl.dart
 import 'features/home_page/domain/repositories/home_page_data_repository.dart';
 import 'features/home_page/domain/usecases/home_page_usecases.dart';
 import 'features/home_page/presentation/bloc/home_page_bloc.dart';
+import 'features/reservation/data/datasources/remote/reservation_data_source.dart';
+import 'features/reservation/data/repositories/reservation_repository_impl.dart';
+import 'features/reservation/domain/repositories/reservation_repository.dart';
+import 'features/reservation/domain/usecases/create_reservation_usescase.dart';
+import 'features/reservation/domain/usecases/list_reservation_usescase.dart';
+import 'features/reservation/presentation/bloc/reservation_page_bloc.dart';
 
 final serviceLocator = GetIt.instance;
 
 Future<void> initDependencies() async {
-  
   // External
   serviceLocator.registerLazySingleton<Dio>(
     () => Dio(
@@ -40,7 +45,8 @@ Future<void> initDependencies() async {
   );
 
   // ApiClient
-  serviceLocator.registerLazySingleton<ApiClient>(() => ApiClient(dio: serviceLocator()));
+  serviceLocator
+      .registerLazySingleton<ApiClient>(() => ApiClient(dio: serviceLocator()));
 
   // Data sources
   serviceLocator.registerLazySingleton<AuthRemoteDataSource>(
@@ -49,6 +55,10 @@ Future<void> initDependencies() async {
 
   serviceLocator.registerLazySingleton<HomeRemoteDataSource>(
     () => HomeRemoteDataSource(apiClient: serviceLocator()),
+  );
+
+  serviceLocator.registerLazySingleton<ReservationDataSource>(
+    () => ReservationDataSource(apiClient: serviceLocator()),
   );
 
   // Repositories
@@ -60,6 +70,10 @@ Future<void> initDependencies() async {
     () => HomeRepositoryImpl(remoteDataSource: serviceLocator()),
   );
 
+  serviceLocator.registerLazySingleton<ReservationRepository>(
+    () => ReservationRepositoryImpl(remoteDataSource: serviceLocator()),
+  );
+
   // Use cases
   serviceLocator.registerLazySingleton<RegisterUsecase>(
     () => RegisterUsecase(repository: serviceLocator()),
@@ -69,6 +83,12 @@ Future<void> initDependencies() async {
   );
   serviceLocator.registerLazySingleton<HomePageUseCases>(
     () => HomePageUseCases(repository: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<CreateReservationUsescase>(
+    () => CreateReservationUsescase(repository: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<ListReservationUsescase>(
+    () => ListReservationUsescase(repository: serviceLocator()),
   );
 
   // LocalStorageService
@@ -89,6 +109,13 @@ Future<void> initDependencies() async {
     ),
   );
 
+  serviceLocator.registerFactory<ReservationBloc>(
+    () => ReservationBloc(
+      createReservationUsecase: serviceLocator(),
+      listReservationUsecase: serviceLocator(),
+    ),
+  );
+
   serviceLocator.registerFactory<HomePageBloc>(
     () => HomePageBloc(homePageUseCases: serviceLocator()),
   );
@@ -96,7 +123,8 @@ Future<void> initDependencies() async {
 // Cubits
   serviceLocator.registerFactory<TabCubit>(() => TabCubit());
   serviceLocator.registerFactory<MapCubit>(() => MapCubit());
-  serviceLocator.registerFactory<ActivitiesDropdownCubit>(() => ActivitiesDropdownCubit());
+  serviceLocator.registerFactory<ActivitiesDropdownCubit>(
+      () => ActivitiesDropdownCubit());
   serviceLocator.registerFactory<CategoryCubit>(() => CategoryCubit());
 }
 

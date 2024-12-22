@@ -1,6 +1,0 @@
-class TElevatedButtonTheme {
-  TElevatedButtonTheme._();
-
-  
-  
-}
