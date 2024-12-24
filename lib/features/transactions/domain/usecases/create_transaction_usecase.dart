@@ -6,13 +6,13 @@ import '../../../../core/abstract/usescase/usecase.dart';
 import '../entities/transaction.dart';
 import '../repositories/transaction_repository.dart';
 
-class CreateReservationUsecase implements Usecase {
+class CreateTransactionUsecase implements Usecase {
   final TransactionRepository repository;
-  CreateReservationUsecase({required this.repository});
+  CreateTransactionUsecase({required this.repository});
 
   @override
   Future<Either<Failure, Transaction>> call(params) {
-    return repository.createReservation(params);
+    return repository.createTransaction(params);
   }
 
 }

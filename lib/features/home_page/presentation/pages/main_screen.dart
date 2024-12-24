@@ -10,14 +10,17 @@ import 'package:iconsax/iconsax.dart';
 import 'package:myapp/main_screen/settings_screen.dart';
 import 'package:myapp/features/home_page/presentation/pages/newhome/newhome.dart';
 
+import '../../../../main_screen/activities_screen.dart';
+import '../../../transactions/presentation/pages/transaction_screen/transactions_screen.dart';
 
 class MainScreen extends StatelessWidget {
   final List<Widget> screens = [
     const NewHome(),
     //HomeScreen(),
     //const ActivitiesScreen(),
-     const FavoritesScreen(),
+    const TransactionsScreen(),
     const MapScreen(),
+    const FavoritesScreen(),
     const SettingsScreen(),
   ];
 
@@ -52,6 +55,10 @@ class MainScreen extends StatelessWidget {
               CustomBottomAppBarItem(
                 icon: Iconsax.map,
                 text: "Map",
+              ),
+              CustomBottomAppBarItem(
+                icon: Iconsax.notification_favorite,
+                text: "Favorites",
               ),
               CustomBottomAppBarItem(
                 icon: Iconsax.setting,

@@ -48,10 +48,10 @@ class TransactionRemoteDataSource {
     }
   }
 
-  Future<TransactionModel> createReservation(Map<String, dynamic> transactionData) async {
+  Future<TransactionModel> initTransaction(Map<String, dynamic> transactionData) async {
     try {
       final response = await apiClient.postRequest(
-        path: "transactions/create", 
+        path: "payments/initiate", 
         data: transactionData,
       );
 

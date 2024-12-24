@@ -35,6 +35,7 @@ class ReservationListScreen extends StatelessWidget {
       isScrollControlled: true,
       builder: (context) => PaymentMethodsSheet(
         totalAmount: reservation.amount,
+        reservationId: reservation.id!,
         onPaymentComplete: () {
           // Dispatch un événement pour mettre à jour le statut de la réservation
           // context.read<ReservationBloc>().add(

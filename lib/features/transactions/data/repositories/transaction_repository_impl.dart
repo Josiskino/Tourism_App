@@ -12,9 +12,9 @@ class TransactionRepositoryImpl implements TransactionRepository {
   TransactionRepositoryImpl({required this.remoteDataSource});
   
   @override
-  Future<Either<Failure, Transaction>> createReservation(TemplateParams transactionData) async {
+  Future<Either<Failure, Transaction>> createTransaction(TemplateParams transactionData) async {
     try {
-      final response = await remoteDataSource.createReservation(transactionData.params);
+      final response = await remoteDataSource.initTransaction(transactionData.params);
       return Right(response);
     } on ApiResponseException catch (e) {
       return Left(ServerFailure(e.message));

@@ -26,6 +26,11 @@ import 'features/reservation/domain/repositories/reservation_repository.dart';
 import 'features/reservation/domain/usecases/create_reservation_usescase.dart';
 import 'features/reservation/domain/usecases/list_reservation_usescase.dart';
 import 'features/reservation/presentation/bloc/reservation_page_bloc.dart';
+import 'features/transactions/data/datasources/remote/transaction_remote_data_source.dart';
+import 'features/transactions/data/repositories/transaction_repository_impl.dart';
+import 'features/transactions/domain/repositories/transaction_repository.dart';
+import 'features/transactions/domain/usecases/create_transaction_usecase.dart';
+import 'features/transactions/presentation/bloc/transaction_page_bloc.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -61,6 +66,10 @@ Future<void> initDependencies() async {
     () => ReservationDataSource(apiClient: serviceLocator()),
   );
 
+  serviceLocator.registerLazySingleton<TransactionRemoteDataSource>(
+    () => TransactionRemoteDataSource(apiClient: serviceLocator()),
+  );
+
   // Repositories
   serviceLocator.registerLazySingleton<UserRepository>(
     () => UserRepositoryImpl(remoteDataSource: serviceLocator()),
@@ -72,6 +81,10 @@ Future<void> initDependencies() async {
 
   serviceLocator.registerLazySingleton<ReservationRepository>(
     () => ReservationRepositoryImpl(remoteDataSource: serviceLocator()),
+  );
+
+  serviceLocator.registerLazySingleton<TransactionRepository>(
+    () => TransactionRepositoryImpl(remoteDataSource: serviceLocator()),
   );
 
   // Use cases
@@ -89,6 +102,9 @@ Future<void> initDependencies() async {
   );
   serviceLocator.registerLazySingleton<ListReservationUsescase>(
     () => ListReservationUsescase(repository: serviceLocator()),
+  );
+  serviceLocator.registerLazySingleton<CreateTransactionUsecase>(
+    () => CreateTransactionUsecase(repository: serviceLocator()),
   );
 
   // LocalStorageService
@@ -118,6 +134,12 @@ Future<void> initDependencies() async {
 
   serviceLocator.registerFactory<HomePageBloc>(
     () => HomePageBloc(homePageUseCases: serviceLocator()),
+  );
+
+  serviceLocator.registerFactory<TransactionBloc>(
+    () => TransactionBloc(
+      createTransactionUsecase: serviceLocator(),
+    ),
   );
 
 // Cubits

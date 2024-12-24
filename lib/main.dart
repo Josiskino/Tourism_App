@@ -13,6 +13,7 @@ import 'package:myapp/main_screen/bloc/cubit/category_cubit.dart';
 import 'features/auth/presentation/pages/login/login.dart';
 import 'features/home_page/presentation/bloc/home_page_bloc.dart';
 import 'features/reservation/presentation/bloc/reservation_page_bloc.dart';
+import 'features/transactions/presentation/bloc/transaction_page_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -58,6 +59,9 @@ class MyApp extends StatelessWidget {
                 BlocProvider<ReservationBloc>(
                   create: (context) => serviceLocator<ReservationBloc>(),
                 ),
+                BlocProvider<TransactionBloc>(
+                  create: (context) => serviceLocator<TransactionBloc>(),
+                ),
                 BlocProvider<TabCubit>(
                   create: (context) => TabCubit(),
                 ),
@@ -83,7 +87,7 @@ class MyApp extends StatelessWidget {
                 //home: const NewHome(),
                 //home: CustomBottomNavBar()
 
-                //home: OnboardScreen(),0
+                //home: OnboardScreen(),
                 //home: const TripScreen(),
                 //home: ProfilScreen(),
               ),
